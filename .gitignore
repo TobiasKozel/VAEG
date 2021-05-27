@@ -1,0 +1,9 @@
+*.pdb
+*.obj
+*.a
+*.lib
+*.dll
+*.exp
+*.ilk
+*.idb
+.sconsign.dblite

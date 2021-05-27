@@ -1,0 +1,26 @@
+{
+	"env": {
+		"includes": [
+			"${workspaceFolder}/godot-cpp/godot-headers",
+			"${workspaceFolder}/godot-cpp/include",
+			"${workspaceFolder}/godot-cpp/include/core",
+			"${workspaceFolder}/godot-cpp/include/gen",
+			"${workspaceFolder}/src"
+		]
+	},
+	"configurations": [
+		{
+			"name": "Mac",
+			"intelliSenseMode": "clang-x64",
+			"includePath": ["${includes}"],
+			"cStandard": "c11",
+			"cppStandard": "c++17",
+			"browse": {
+				"path": ["${workspaceFolder}"],
+				"limitSymbolsToIncludedHeaders": true,
+				"databaseFilename": ""
+			}
+		}
+	],
+	"version": 4
+}
