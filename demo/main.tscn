@@ -5,6 +5,13 @@
 
 [node name="main" type="Node"]
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 500.618, 327.759 )
+
+[node name="Sprite" type="Sprite" parent="Node2D"]
+position = Vector2( 8.09955, 0.427017 )
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
