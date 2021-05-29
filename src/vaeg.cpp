@@ -1,24 +1,24 @@
-#include "gdexample.h"
+#include "vaeg.h"
 
 using namespace godot;
 
-void GDExample::_register_methods() {
-	register_method("_process", &GDExample::_process);
+void Vaeg::_register_methods() {
+	register_method("_process", &Vaeg::_process);
 }
 
-GDExample::GDExample() {
+Vaeg::Vaeg() {
 }
 
-GDExample::~GDExample() {
+Vaeg::~Vaeg() {
 	// add your cleanup here
 }
 
-void GDExample::_init() {
+void Vaeg::_init() {
 	// initialize any variables here
 	time_passed = 0.0;
 }
 
-void GDExample::_process(float delta) {
+void Vaeg::_process(float delta) {
 	time_passed += delta;
 
 	Vector2 new_position = Vector2(10.0 + (10.0 * sin(time_passed * 6.0)), 10.0 + (10.0 * cos(time_passed * 20)));

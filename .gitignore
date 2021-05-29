@@ -6,4 +6,7 @@
 *.exp
 *.ilk
 *.idb
+*.os
+*.so
+*.dylib
 .sconsign.dblite
