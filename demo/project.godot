@@ -20,7 +20,7 @@ driver=""
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/reloader/plugin.cfg", "res://addons/test_plugin/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/reloader/plugin.cfg", "res://addons/vaeg/plugin.cfg" )
 
 [physics]
 

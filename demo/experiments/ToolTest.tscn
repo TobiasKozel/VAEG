@@ -3,7 +3,25 @@
 [ext_resource path="res://experiments/TestTool.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
 [ext_resource path="res://resources/denied.wav" type="AudioStream" id=3]
-[ext_resource path="res://addons/test_plugin/custom_audio_source.gd" type="Script" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends \"res://addons/test_plugin/custom_audio_source.gd\"
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
 
 [node name="Node2D" type="Node2D"]
 
@@ -18,5 +36,4 @@ script = ExtResource( 1 )
 stream = ExtResource( 3 )
 
 [node name="CustomAudioSource" type="Node2D" parent="."]
-script = ExtResource( 4 )
-stream = ExtResource( 3 )
+script = SubResource( 1 )

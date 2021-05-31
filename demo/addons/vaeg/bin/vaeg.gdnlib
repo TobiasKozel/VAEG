@@ -7,9 +7,9 @@ reloadable=true
 
 [entry]
 
-OSX.64="res://bin/osx/libvaeg.dylib"
-Windows.64="res://bin/win64/libvaeg.dll"
-X11.64="res://bin/x11/libvaeg.so"
+OSX.64="res://addons/vaeg/bin/osx/libvaeg.dylib"
+Windows.64="res://addons/vaeg/bin/win64/libvaeg.dll"
+X11.64="res://addons/vaeg/bin/x11/libvaeg.so"
 
 [dependencies]
 
