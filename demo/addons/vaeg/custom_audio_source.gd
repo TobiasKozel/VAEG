@@ -1,7 +1,8 @@
-extends Node2D
+extends Spatial
 
 var child: AudioStreamPlayer2D = AudioStreamPlayer2D.new()
 export var stream: AudioStream setget set_stream
+export var sample: AudioStreamSample
 
 func set_stream(s: AudioStream):
 	stream = s

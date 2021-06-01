@@ -1,19 +1,19 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://addons/vaeg/bin/vaeg.gdns" type="Script" id=2]
+[ext_resource path="res://resources/denied.wav" type="AudioStream" id=3]
 
 [node name="main" type="Node"]
 
-[node name="Node2D" type="Node2D" parent="."]
-position = Vector2( 500.618, 327.759 )
+[node name="Spatial2" type="Spatial" parent="."]
+
+[node name="Spatial" type="Spatial" parent="Spatial2"]
 script = ExtResource( 2 )
+stream = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="Node2D"]
-position = Vector2( 8.09955, 0.427017 )
+[node name="Sprite3D" type="Sprite3D" parent="Spatial2/Spatial"]
 texture = ExtResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 
-[node name="Spatial" type="Spatial" parent="."]
+[node name="Camera" type="Camera" parent="Spatial2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.98996 )

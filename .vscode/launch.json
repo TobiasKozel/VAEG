@@ -5,10 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(Windows) Attach",
+            "type": "cppvsdbg",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        },
+        {
             "name": "(gdb) Launch x11",
             "type": "cppdbg",
             "request": "attach",
-            "program": "${workspaceFolder}/demo/bin/x11/libvaeg.so",
+            "program": "${workspaceFolder}/demo/addons/vaeg/bin/x11/libvaeg.so",
             "processId": "${command:pickProcess}",
             "MIMode": "gdb",
             "setupCommands": [
