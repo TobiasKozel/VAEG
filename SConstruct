@@ -105,9 +105,12 @@ else:
 
 cpp_library += "." + str(bits)
 
+# TODO this could probably be done the scons way
 p = os.popen("cmake --build VAE/build --target vae_pack", "r")
 lines = p.readlines()
-print(lines)
+for i in lines:
+    print(i)
+
 # build_vae = env.Command(vae_path + "/" + vae_library, [], "cmake --build VAE/build --target vae_pack")
 # env.AlwaysBuild(build_vae)
 
