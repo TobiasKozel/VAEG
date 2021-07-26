@@ -1,10 +1,21 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://addons/vaeg/bin/vaeg.gdns" type="Script" id=2]
 [ext_resource path="res://resources/denied.wav" type="AudioStream" id=3]
 
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		var key: InputEventKey = event
+		if key.scancode == KEY_ESCAPE:
+			get_tree().quit()
+"
+
 [node name="main" type="Node"]
+script = SubResource( 1 )
 
 [node name="Spatial2" type="Spatial" parent="."]
 

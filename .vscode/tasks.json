@@ -1,22 +1,23 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "scons build windows",
-            "type": "shell",
-            "command": "scons platform=windows bits=64 target=debug",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "scons build linux",
-            "type": "shell",
-            "command": "scons platform=linux bits=64 target=debug"
-        }
-    ]
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "scons build windows",
+			"type": "shell",
+			"command": "scons platform=windows bits=64 target=debug",
+			"problemMatcher": []
+		},
+		{
+			"label": "scons build linux",
+			"type": "shell",
+			"command": "scons platform=linux bits=64 target=debug",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
 }

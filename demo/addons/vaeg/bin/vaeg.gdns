@@ -5,5 +5,5 @@
 [resource]
 
 resource_name = "vaeg"
-class_name = "Vaeg"
+class_name = "Emitter"
 library = ExtResource( 1 )
