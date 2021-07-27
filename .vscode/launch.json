@@ -11,13 +11,13 @@
 			"processId": "${command:pickProcess}"
 		},
 		{
-			"name": "(gdb) Launch x11",
+			"name": "(gdb) Attach x11",
 			"type": "cppdbg",
 			"request": "attach",
 			"program": "${workspaceFolder}/demo/addons/vaeg/bin/x11/libvaeg.so",
 			"processId": "${command:pickProcess}",
 			"MIMode": "gdb",
-			"miDebuggerPath": "${workspaceFolder}/debug.sh",
+			"miDebuggerPath": "/bin/gdb",
 			"setupCommands": [
 				{
 					"description": "Enable pretty-printing for gdb",

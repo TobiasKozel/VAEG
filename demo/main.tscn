@@ -22,6 +22,7 @@ script = SubResource( 1 )
 [node name="Spatial" type="Spatial" parent="Spatial2"]
 script = ExtResource( 2 )
 stream = ExtResource( 3 )
+playing = true
 
 [node name="Sprite3D" type="Sprite3D" parent="Spatial2/Spatial"]
 texture = ExtResource( 1 )

@@ -11,3 +11,5 @@
 *.dylib
 .sconsign.dblite
 *.log
+xtleak.*
+*.reapeaks

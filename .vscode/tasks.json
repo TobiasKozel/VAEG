@@ -12,7 +12,7 @@
 		{
 			"label": "scons build linux",
 			"type": "shell",
-			"command": "scons platform=linux bits=64 target=debug",
+			"command": "scons platform=linux bits=64 target=debug use_llvm=no",
 			"problemMatcher": [],
 			"group": {
 				"kind": "build",

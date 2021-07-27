@@ -5,40 +5,59 @@
 #include <Spatial.hpp>
 #include <AudioStreamSample.hpp>
 
-#include "../VAE/src/core/device/vae_portaudio.hpp"
+#include "../VAE/src/core/device/vae_rtaudio.hpp"
 #include "../VAE/src/core/vae_config.hpp"
 #include "../VAE/external/tklb/src/types/THeapBuffer.hpp"
+#include "../VAE/external/tklb/src/types/TSpinLock.hpp"
+
 
 namespace godot { namespace vaeg {
+
 	class Emitter;
 
 	class MixerShared {
-		MixerShared() { }
-	public:
-		tklb::HeapBuffer<Emitter*> emitters;
-		std::function<void(Emitter*)> regFun;
-		std::function<void(Emitter*)> relFun;
+		using Mutex = tklb::SpinLock;
+		using Emitters = tklb::HeapBuffer<Emitter*>;
+		Emitters emitters;
+		Mutex mutex;
 
-		static MixerShared& instance() {
-			static MixerShared shared;
-			return shared;
+	public:
+
+		void add(Emitter* e) {
+			Mutex::Lock lock(mutex);
+			emitters.push(e);
 		}
 
+		void remove(Emitter* e) {
+			Mutex::Lock lock(mutex);
+			emitters.remove(e);
+		}
+
+		void lock() {
+			mutex.lock();
+		}
+
+		void unlock() {
+			mutex.unlock();
+		}
+
+		Emitters& get_emitters() {
+			return emitters;
+		}
 	};
-} }
 
+	MixerShared mixerShared;
 
-namespace godot { namespace vaeg {
 	class Emitter : public Spatial {
 		GODOT_CLASS(Emitter, Spatial)
 	private:
 		size_t mTime = 0;
 		Ref<AudioStreamSample> mStream;
-		PoolByteArray mBytes;
+		tklb::AudioBufferFloat mBuffer;
 	public:
 
 		~Emitter() {
-			MixerShared::instance().emitters.remove(this);
+			mixerShared.remove(this);
 			Godot::print("Remove audio instance");
 		}
 
@@ -60,8 +79,7 @@ namespace godot { namespace vaeg {
 
 		void _init() {
 			Godot::print("Push audio instance");
-			printf("test push audio\n");
-			MixerShared::instance().emitters.push(this);
+			mixerShared.add(this);
 		}
 
 		void set_stream(Ref<AudioStreamSample> s) {
@@ -75,7 +93,16 @@ namespace godot { namespace vaeg {
 				if (s->get_format() != 1) {
 					Godot::print("Unknown format!");
 				}
-				mBytes = mStream->get_data();
+				auto arrayBuf = s->get_data();
+				auto read = arrayBuf.read();
+				const int16_t* data = reinterpret_cast<const int16_t*>(read.ptr());
+				const int length = arrayBuf.size() / 4;
+				// 82,714
+				mBuffer.resize(length, 2);
+				mBuffer.setFromInterleaved(data, length, 2);
+				mBuffer.multiply(0.0001);
+				// mBuffer.set(data, length, 0);
+				// mBuffer.set(data, length, 1);
 			}
 		}
 
@@ -87,51 +114,49 @@ namespace godot { namespace vaeg {
 			mTime = time;
 		}
 
-		size_t get_length() const {
-			if (mStream.is_valid()) { return 0; }
-			return mStream->get_length();
-		}
-
-		int get_channels() {
-			if (mStream.is_valid()) { return 0; }
-			return mStream->is_stereo() ? 2 : 1;
+		const tklb::AudioBufferFloat& get_buffer() const {
+			return mBuffer;
 		}
 
 		Ref<AudioStreamSample> get_stream() { return mStream; }
 
-		const int16_t* get_data() {
-			if (!mStream.is_valid()) { return nullptr; }
-			return reinterpret_cast<const int16_t*>(mBytes.read().ptr());
-		}
 	};
 
 	struct Mixer {
-		Mixer() {
-			Godot::print("Create Mixer");
-			printf("test mixer created\n");
-			vae::DeviceInfo devices[100];
-			auto& backend = vae::core::BackendPortAudio::instance();
-			for (unsigned int i = 0; i < backend.getDeviceCount(); i++) {
-				devices[i] = backend.getDevice(i);
-			}
+		using Backend = vae::core::BackendRtAudio;
+		using Device = vae::core::DeviceRtaudio;
 
-			size_t time = 0;
+		Device* device = nullptr;
+		size_t time = 0;
+		bool running = true;
+		bool threadExited = false;
+		Mixer() {
+			auto& backend = Backend::instance();
+
 			vae::core::Device::SyncCallback callback =
 			[&](const vae::core::Device::AudioBuffer& fromDevice, vae::core::Device::AudioBuffer& toDevice) {
+				if (!running) {
+					threadExited = true;
+					return;
+				}
+				toDevice.set(0.0f);
 				const size_t samples = toDevice.validSize();
-				for (int index = 0; MixerShared::instance().emitters.size(); index++) {
-					auto& i = MixerShared::instance().emitters[index];
+				mixerShared.lock();
+				auto& emitters = mixerShared.get_emitters();
+				const int count =  emitters.size();
+				for (int index = 0; index < count; index++) {
+					auto& i = emitters[index];
 					if (!i->mPlaying) { continue; }
 					const size_t startTime = i->get_time();
-					const size_t totalLength = i->get_length();
-					const size_t length = std::min(samples, i->get_length() - startTime);
-					// for (int c = 0; c < toDevice.channels(); c++) {
-					// 	int channel = c % i->get_channels();
-					// 	const int16_t* buf = i->get_data();
-					// 	for (size_t s = 0; s < length; s++) {
-					// 		toDevice[c][s] += buf[startTime + s] / 32767.0;
-					// 	}
-					// }
+					const auto& buffer = i->get_buffer();
+					const size_t totalLength = buffer.size();
+					const size_t length = std::min(samples, totalLength - startTime);
+					for (int c = 0; c < toDevice.channels(); c++) {
+						int channel = c % buffer.channels();
+						for (size_t s = 0; s < length; s++) {
+							toDevice[c][s] += buffer[c][startTime + s];
+						}
+					}
 					if (totalLength <= startTime + length) {
 						i->set_time(0);
 						if (!i->mLoop) {
@@ -142,13 +167,27 @@ namespace godot { namespace vaeg {
 						i->set_time(startTime + length);
 					}
 				}
+				mixerShared.unlock();
 
 				time += samples;
 			};
-			vae::core::DevicePortaudio outputDevice(callback); // sync output device
-			outputDevice.openDevice();
+			device = new Device(callback); // sync output device
+			device->openDevice(2, 2);
+		}
+
+		~Mixer() {
+			running = false;
+			while (!threadExited)
+			{
+
+			}
+
+			device->closeDevice();
+			delete device;
 		}
 	};
+
+	Mixer MainMixer;
 } } // godot::vaeg
 
 
