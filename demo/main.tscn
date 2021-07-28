@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://addons/vaeg/bin/vaeg.gdns" type="Script" id=2]
@@ -14,18 +14,31 @@ func _input(event):
 			get_tree().quit()
 "
 
+[sub_resource type="GDScript" id=2]
+script/source = "extends Spatial
+
+var interval = 2
+var time = 0
+func _process(delta):
+	time += delta
+	if interval < time:
+		time = 0
+		$EmitterTest.playing = !$EmitterTest.playing
+"
+
 [node name="main" type="Node"]
 script = SubResource( 1 )
 
-[node name="Spatial2" type="Spatial" parent="."]
+[node name="SceneRoot" type="Spatial" parent="."]
+script = SubResource( 2 )
 
-[node name="Spatial" type="Spatial" parent="Spatial2"]
+[node name="EmitterTest" type="Spatial" parent="SceneRoot"]
 script = ExtResource( 2 )
-stream = ExtResource( 3 )
-playing = true
+playing = false
+sample_ref = ExtResource( 3 )
 
-[node name="Sprite3D" type="Sprite3D" parent="Spatial2/Spatial"]
+[node name="Sprite3D" type="Sprite3D" parent="SceneRoot/EmitterTest"]
 texture = ExtResource( 1 )
 
-[node name="Camera" type="Camera" parent="Spatial2"]
+[node name="Camera" type="Camera" parent="SceneRoot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.98996 )

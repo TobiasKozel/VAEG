@@ -1,18 +1,16 @@
 #ifndef VAEG_EMITTER
 #define VAEG_EMITTER
 
-#include <Godot.hpp>
-#include <Spatial.hpp>
-#include <AudioStreamSample.hpp>
-
+#include "./vaeg_gdnative.hpp"
 #include "../VAE/src/core/device/vae_rtaudio.hpp"
 #include "../VAE/src/core/vae_config.hpp"
 #include "../VAE/external/tklb/src/types/THeapBuffer.hpp"
 #include "../VAE/external/tklb/src/types/TSpinLock.hpp"
 
+#include <string.h>
+#include <stdio.h>
 
-namespace godot { namespace vaeg {
-
+namespace vaeg {
 	class Emitter;
 
 	class MixerShared {
@@ -47,79 +45,74 @@ namespace godot { namespace vaeg {
 	};
 
 	MixerShared mixerShared;
+	godot_method_bind* get_buffer_data_bind;
 
-	class Emitter : public Spatial {
-		GODOT_CLASS(Emitter, Spatial)
-	private:
-		size_t mTime = 0;
-		Ref<AudioStreamSample> mStream;
-		tklb::AudioBufferFloat mBuffer;
-	public:
+	struct Emitter {
+		tklb::AudioBufferFloat buffer;
+		bool playing = false;
+		bool loop = false;
+		size_t time = 0;
+		godot_object* sample_ref;
+
+		VAEG_CLASS(Emitter)
+		VAEG_SETGET(Emitter, playing, bool)
+		VAEG_SETGET(Emitter, loop, bool)
+		// VAEG_SETGET(Emitter, sample_ref, object)
+
+		static void _register(void* handle) {
+			VAEG_REGISTER_PROP(handle, Emitter, playing, bool, false)
+			VAEG_REGISTER_PROP(handle, Emitter, loop, bool, false)
+			VAEG_REGISTER_PROP(handle, Emitter, sample_ref, object, nullptr)
+
+			get_buffer_data_bind = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
+			// VAEG_REGISTER_METHOD(Emitter, set_stream)
+		}
+
+		//static inline Object *___get_from_variant(Variant a) { godot_object *o = (godot_object*) a; return (o) ? (Object *) godot::nativescript_1_1_api->godot_nativescript_get_instance_binding_data(godot::_RegisterState::language_index, o) : nullptr; }
+
+		static void _set_sample_ref(
+			godot_object* instance_pointer, void* method_data,
+			void* user_data, godot_variant* value
+		) {
+			auto emitter = reinterpret_cast<Emitter*>(user_data);
+			emitter->sample_ref = vaeg::api->godot_variant_as_object(value);
+
+			if (!emitter->sample_ref) {
+				mixerShared.remove(emitter);
+				emitter->buffer.resize(0);
+				return;
+			}
+
+			godot_pool_byte_array pool;
+			const void* no_args[1] = { };
+			api->godot_method_bind_ptrcall(get_buffer_data_bind, emitter->sample_ref, no_args, &pool);
+			godot_int size = api->godot_pool_byte_array_size(&pool);
+			const int channels = 2;
+			const int length = size / (channels * 2);
+			godot_pool_byte_array_read_access* read_access = api->godot_pool_byte_array_read(&pool);
+			const uint8_t* data = api->godot_pool_byte_array_read_access_ptr(read_access);
+			mixerShared.remove(emitter);
+			emitter->buffer.resize(length, 2);
+			emitter->buffer.setFromInterleaved(reinterpret_cast<const short*>(data), length, channels);
+			emitter->buffer.multiply(0.0001);
+			mixerShared.add(emitter);
+			api->godot_pool_byte_array_read_access_destroy(read_access);
+			api->godot_pool_byte_array_destroy(&pool);
+		}
+		static godot_variant _get_sample_ref(
+			godot_object* instance_pointer, void* method_data, void* user_data
+		) {
+			auto instance = reinterpret_cast<Emitter*>(user_data);
+			godot_variant ret;
+			vaeg::api->godot_variant_new_object(&ret, instance->sample_ref);
+			return ret;
+		}
+
+		Emitter() { }
 
 		~Emitter() {
 			mixerShared.remove(this);
-			Godot::print("Remove audio instance");
 		}
-
-		bool mPlaying = false;
-		bool mLoop = false;
-
-		static void _register_methods() {
-			// register_method("_process", &Vaeg::_process);
-			register_property<Emitter, Ref<AudioStreamSample>>(
-				"stream",
-				&Emitter::set_stream,
-				&Emitter::get_stream,
-				Ref<AudioStreamSample>()
-			);
-
-			register_property<Emitter, bool>("playing", &Emitter::mPlaying, false);
-			register_property<Emitter, bool>("loop", &Emitter::mLoop, false);
-		}
-
-		void _init() {
-			Godot::print("Push audio instance");
-			mixerShared.add(this);
-		}
-
-		void set_stream(Ref<AudioStreamSample> s) {
-			mTime = 0;
-			mStream = s;
-			if (s.is_valid()) {
-				if (s->get_mix_rate() != vae::Config::SampleRate) {
-					Godot::print("Mixrate missmatch!");
-				}
-
-				if (s->get_format() != 1) {
-					Godot::print("Unknown format!");
-				}
-				auto arrayBuf = s->get_data();
-				auto read = arrayBuf.read();
-				const int16_t* data = reinterpret_cast<const int16_t*>(read.ptr());
-				const int length = arrayBuf.size() / 4;
-				// 82,714
-				mBuffer.resize(length, 2);
-				mBuffer.setFromInterleaved(data, length, 2);
-				mBuffer.multiply(0.0001);
-				// mBuffer.set(data, length, 0);
-				// mBuffer.set(data, length, 1);
-			}
-		}
-
-		size_t get_time() const {
-			return mTime;
-		}
-
-		void set_time(const size_t&& time) {
-			mTime = time;
-		}
-
-		const tklb::AudioBufferFloat& get_buffer() const {
-			return mBuffer;
-		}
-
-		Ref<AudioStreamSample> get_stream() { return mStream; }
-
 	};
 
 	struct Mixer {
@@ -146,9 +139,9 @@ namespace godot { namespace vaeg {
 				const int count =  emitters.size();
 				for (int index = 0; index < count; index++) {
 					auto& i = emitters[index];
-					if (!i->mPlaying) { continue; }
-					const size_t startTime = i->get_time();
-					const auto& buffer = i->get_buffer();
+					if (!i->playing) { continue; }
+					const size_t startTime = i->time;
+					const auto& buffer = i->buffer;
 					const size_t totalLength = buffer.size();
 					const size_t length = std::min(samples, totalLength - startTime);
 					for (int c = 0; c < toDevice.channels(); c++) {
@@ -158,13 +151,13 @@ namespace godot { namespace vaeg {
 						}
 					}
 					if (totalLength <= startTime + length) {
-						i->set_time(0);
-						if (!i->mLoop) {
+						i->time = 0;;
+						if (!i->loop) {
 							// stop if not looping
-							i->mPlaying = false;
+							i->playing = false;
 						}
 					} else {
-						i->set_time(startTime + length);
+						i->time = startTime + length;
 					}
 				}
 				mixerShared.unlock();
@@ -179,17 +172,13 @@ namespace godot { namespace vaeg {
 			running = false;
 			while (!threadExited)
 			{
-
 			}
-
 			device->closeDevice();
 			delete device;
 		}
 	};
 
 	Mixer MainMixer;
-} } // godot::vaeg
-
-
+}
 
 #endif // VAEG_EMITTER

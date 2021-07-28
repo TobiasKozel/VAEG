@@ -1,25 +1,27 @@
 {
 	"env": {
 		"includes": [
-			"${workspaceFolder}/godot-cpp/godot-headers",
-			"${workspaceFolder}/godot-cpp/include",
-			"${workspaceFolder}/godot-cpp/include/core",
-			"${workspaceFolder}/godot-cpp/include/gen",
-			"${workspaceFolder}/src"
+			"${workspaceFolder}/src",
+			"${workspaceFolder}/godot_headers"
 		]
 	},
 	"configurations": [
 		{
-			"name": "Mac",
+			"name": "Linux",
 			"intelliSenseMode": "clang-x64",
-			"includePath": ["${includes}"],
+			"includePath": [
+				"${includes}"
+			],
 			"cStandard": "c11",
 			"cppStandard": "c++14",
 			"browse": {
-				"path": ["${workspaceFolder}"],
+				"path": [
+					"${workspaceFolder}"
+				],
 				"limitSymbolsToIncludedHeaders": true,
 				"databaseFilename": ""
-			}
+			},
+			"configurationProvider": "ms-vscode.makefile-tools"
 		}
 	],
 	"version": 4
