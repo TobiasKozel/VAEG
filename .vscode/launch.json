@@ -5,6 +5,44 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "(Windows) scene",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"program": "C:/dev/tools/Godot.exe",
+			"args": [
+				"${workspaceFolder}/demo/main.tscn"
+			],
+			"symbolOptions": {
+				"searchPaths": [],
+				"searchMicrosoftSymbolServer": false
+			},
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/demo",
+			"environment": [],
+			"console": "externalTerminal"
+		},
+		{
+			"name": "(Windows) editor",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"program": "C:/dev/git/master/godot/bin/godot.windows.tools.64.exe",
+			"args": [
+				"${workspaceFolder}/demo/project.godot"
+			],
+			"symbolSearchPath": "${workspaceFolder}/demo/addons/vaeg/bin/win64/;C:/dev/git/master/godot/bin/",
+			"symbolOptions": {
+				"searchPaths": [
+					"${workspaceFolder}/demo/addons/vaeg/bin/win64/",
+					"C:/dev/git/master/godot/bin/"
+				],
+				"searchMicrosoftSymbolServer": false
+			},
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/demo",
+			"environment": [],
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "(Windows) Attach",
 			"type": "cppvsdbg",
 			"request": "attach",

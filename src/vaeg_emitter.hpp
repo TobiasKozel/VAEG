@@ -165,7 +165,7 @@ namespace vaeg {
 				time += samples;
 			};
 			device = new Device(callback); // sync output device
-			device->openDevice(2, 2);
+			device->openDevice();
 		}
 
 		~Mixer() {
