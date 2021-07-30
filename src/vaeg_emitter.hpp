@@ -53,6 +53,7 @@ namespace vaeg {
 		bool loop = false;
 		size_t time = 0;
 		godot_object* sample_ref;
+		godot_variant sample_var;
 
 		VAEG_CLASS(Emitter)
 		VAEG_SETGET(Emitter, playing, bool)
@@ -62,8 +63,10 @@ namespace vaeg {
 		static void _register(void* handle) {
 			VAEG_REGISTER_PROP(handle, Emitter, playing, bool, false)
 			VAEG_REGISTER_PROP(handle, Emitter, loop, bool, false)
-			VAEG_REGISTER_PROP(handle, Emitter, sample_ref, object, nullptr)
-
+			VAEG_REGISTER_PROP_HINT(
+				handle, Emitter, sample_ref, object, nullptr,
+				GODOT_PROPERTY_HINT_RESOURCE_TYPE, "AudioStreamSample"
+			)
 			get_buffer_data_bind = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
 			// VAEG_REGISTER_METHOD(Emitter, set_stream)
 		}
@@ -76,6 +79,7 @@ namespace vaeg {
 		) {
 			auto emitter = reinterpret_cast<Emitter*>(user_data);
 			emitter->sample_ref = vaeg::api->godot_variant_as_object(value);
+			vaeg::api->godot_variant_new_copy(&emitter->sample_var, value);
 
 			if (!emitter->sample_ref) {
 				mixerShared.remove(emitter);
@@ -103,9 +107,11 @@ namespace vaeg {
 			godot_object* instance_pointer, void* method_data, void* user_data
 		) {
 			auto instance = reinterpret_cast<Emitter*>(user_data);
-			godot_variant ret;
-			vaeg::api->godot_variant_new_object(&ret, instance->sample_ref);
-			return ret;
+			// godot_variant ret;
+			// vaeg::api->godot_variant_new_nil(&ret);
+			// vaeg::api->godot_variant_as_pool_byte_array()
+			// vaeg::api->godot_variant_new_object(&ret, instance->sample_ref);
+			return instance->sample_var;
 		}
 
 		Emitter() { }

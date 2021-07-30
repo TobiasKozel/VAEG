@@ -160,33 +160,39 @@ p_name::_register(handle);
 	);															\
 }
 
+#define VAEG_REGISTER_PROP(handle, p_name, p_prop, p_type, p_init) \
+VAEG_REGISTER_PROP_HINT(											\
+	handle, p_name, p_prop, p_type, p_init,							\
+	GODOT_PROPERTY_HINT_NONE, ""									\
+)
 /**
  * Register a property of a class
  * Needs to have setters and getters
  */
-#define VAEG_REGISTER_PROP(handle, p_name, p_prop, p_type, p_init) 	\
-{																	\
-	godot_property_attributes attr = { };							\
-	attr.rset_type = GODOT_METHOD_RPC_MODE_DISABLED;				\
-	attr.usage = GODOT_PROPERTY_USAGE_DEFAULT;						\
-	attr.type = VAEG_TYPE::godot_variant_type_ ## p_type;			\
-	attr.hint = GODOT_PROPERTY_HINT_NONE;							\
-	godot_string hint;												\
-	vaeg::api->godot_string_new(&hint);								\
-	attr.hint_string = hint;										\
-	godot_variant init;												\
-	vaeg::api->godot_variant_new_ ## p_type (&init, p_init);		\
-	godot_property_set_func set_func = { };							\
-	set_func.method_data = NULL;									\
-	set_func.free_func = NULL;										\
-	set_func.set_func = p_name::_set_ ##p_prop;						\
-	godot_property_get_func get_func = { };							\
-	get_func.method_data = NULL;									\
-	get_func.free_func = NULL;										\
-	get_func.get_func = p_name::_get_ ##p_prop;						\
-	vaeg::nativescript_api->godot_nativescript_register_property(	\
-		handle, #p_name, #p_prop, &attr, set_func, get_func			\
-	);																\
+#define VAEG_REGISTER_PROP_HINT(handle, p_name, p_prop, p_type, p_init, p_hint_t, p_hint) 	\
+{																							\
+	godot_property_attributes attr = { };													\
+	attr.rset_type = GODOT_METHOD_RPC_MODE_DISABLED;										\
+	attr.usage = GODOT_PROPERTY_USAGE_DEFAULT;												\
+	attr.type = VAEG_TYPE::godot_variant_type_ ## p_type;									\
+	attr.hint = p_hint_t;																	\
+	godot_string hint;																		\
+	vaeg::api->godot_string_new(&hint);														\
+	vaeg::api->godot_string_parse_utf8(&hint, p_hint);										\
+	attr.hint_string = hint;																\
+	godot_variant init;																		\
+	vaeg::api->godot_variant_new_ ## p_type (&init, p_init);								\
+	godot_property_set_func set_func = { };													\
+	set_func.method_data = NULL;															\
+	set_func.free_func = NULL;																\
+	set_func.set_func = p_name::_set_ ##p_prop;												\
+	godot_property_get_func get_func = { };													\
+	get_func.method_data = NULL;															\
+	get_func.free_func = NULL;																\
+	get_func.get_func = p_name::_get_ ##p_prop;												\
+	vaeg::nativescript_api->godot_nativescript_register_property(							\
+		handle, #p_name, #p_prop, &attr, set_func, get_func									\
+	);																						\
 }
 
 extern "C" void GDN_EXPORT godot_nativescript_init(void* handle) {
