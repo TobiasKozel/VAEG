@@ -31,6 +31,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 file(GLOB SRC_CORE "src/*.cpp")
 
 # we want everything to be linked into a single file
+# TODO doesn't build with off for some reason
 set(VAE_BUILD_STATIC_LIBS ON)
 
 add_subdirectory(VAE)

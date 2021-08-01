@@ -5,12 +5,17 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "(Windows) scene",
+			"name": "(Windows) scene debug",
 			"type": "cppvsdbg",
 			"request": "launch",
-			"program": "C:/dev/tools/Godot.exe",
+			"program": "C:/dev/git/master/godot/bin/godot.windows.tools.64.exe",
+			// "program": "C:/dev/tools/Godot.exe",
 			"args": [
-				"${workspaceFolder}/demo/main.tscn"
+				"${workspaceFolder}/demo/main.tscn",
+				"--path",
+				"C:/dev/git/master/VAEG/demo",
+				"--remote-debug",
+				"127.0.0.1:6007",
 			],
 			"symbolOptions": {
 				"searchPaths": [],
@@ -19,12 +24,13 @@
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/demo",
 			"environment": [],
-			"console": "externalTerminal"
+			"console": "integratedTerminal"
 		},
 		{
-			"name": "(Windows) editor",
+			"name": "(Windows) editor debug",
 			"type": "cppvsdbg",
 			"request": "launch",
+			// "program": "C:/dev/tools/Godot.exe",
 			"program": "C:/dev/git/master/godot/bin/godot.windows.tools.64.exe",
 			"args": [
 				"${workspaceFolder}/demo/project.godot"

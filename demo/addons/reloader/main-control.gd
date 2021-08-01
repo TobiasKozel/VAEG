@@ -3,6 +3,7 @@ extends Panel
 
 const plugin_name = "vaeg"
 
+
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		var key: InputEventKey = event
@@ -19,10 +20,9 @@ func _input(event):
 				editor_interface.set_plugin_enabled(plugin_name, true)
 
 			if key.scancode == KEY_I:
-				print("test")
-				OS.set_window_position(Vector2(-2000, 100))
-			#	var split = editor_interface.get_file_system_dock().get_parent_control().get_parent_control()
-			#	var tree_control = split.get_children()[0].get_children()[0]
-			#	tree_control.set_edited_scene(editor_interface.get_base_control())
-			#	editor_interface.inspect_object(tree_control)
+				var base = editor_interface.get_base_control()
+				var parent = base.get_parent()
+				parent = parent.get_parent()
+				print(parent)
+				parent.emit_signal("play_pressed")
 			#	editor_interface.inspect_object(editor_interface.get_base_control())

@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 namespace vaeg {
-	class Emitter;
+	struct Emitter;
 
 	class MixerShared {
 		using Mutex = tklb::SpinLock;
@@ -46,14 +46,17 @@ namespace vaeg {
 
 	MixerShared mixerShared;
 	godot_method_bind* get_buffer_data_bind;
+	godot_method_bind* get_rid_bind;
+	godot_method_bind* get_id_bind;
 
 	struct Emitter {
 		tklb::AudioBufferFloat buffer;
 		bool playing = false;
 		bool loop = false;
 		size_t time = 0;
-		godot_object* sample_ref;
+		int rid = 0;
 		godot_variant sample_var;
+		godot_pool_byte_array pool;
 
 		VAEG_CLASS(Emitter)
 		VAEG_SETGET(Emitter, playing, bool)
@@ -68,6 +71,8 @@ namespace vaeg {
 				GODOT_PROPERTY_HINT_RESOURCE_TYPE, "AudioStreamSample"
 			)
 			get_buffer_data_bind = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
+			get_rid_bind = api->godot_method_bind_get_method("Resource", "get_rid");
+			get_id_bind = api->godot_method_bind_get_method("RID", "get_id");
 			// VAEG_REGISTER_METHOD(Emitter, set_stream)
 		}
 
@@ -78,28 +83,44 @@ namespace vaeg {
 			void* user_data, godot_variant* value
 		) {
 			auto emitter = reinterpret_cast<Emitter*>(user_data);
-			emitter->sample_ref = vaeg::api->godot_variant_as_object(value);
-			vaeg::api->godot_variant_new_copy(&emitter->sample_var, value);
 
-			if (!emitter->sample_ref) {
-				mixerShared.remove(emitter);
+			if (!value) {
 				emitter->buffer.resize(0);
 				return;
 			}
 
-			godot_pool_byte_array pool;
+			api->godot_variant_new_copy(&emitter->sample_var, value);
+			godot_object* sample_ref;
+			sample_ref = vaeg::api->godot_variant_as_object(&emitter->sample_var);
+
+
+
+
 			const void* no_args[1] = { };
-			api->godot_method_bind_ptrcall(get_buffer_data_bind, emitter->sample_ref, no_args, &pool);
+			// godot_rid rid_object;
+			// api->godot_rid_new(&rid_object);
+			// api->godot_method_bind_ptrcall(get_rid_bind, value, no_args, &rid_object);
+			// int new_rid;
+			// api->godot_method_bind_ptrcall(get_id_bind, &rid_object, no_args, &new_rid);
+			// if (new_rid == emitter->rid) {
+			// 	return;
+			// }
+
+			godot_pool_byte_array pool;
+			api->godot_pool_byte_array_new(&pool);
+			api->godot_method_bind_ptrcall(get_buffer_data_bind, sample_ref, no_args, &pool);
 			godot_int size = api->godot_pool_byte_array_size(&pool);
 			const int channels = 2;
 			const int length = size / (channels * 2);
 			godot_pool_byte_array_read_access* read_access = api->godot_pool_byte_array_read(&pool);
 			const uint8_t* data = api->godot_pool_byte_array_read_access_ptr(read_access);
+
 			mixerShared.remove(emitter);
 			emitter->buffer.resize(length, 2);
 			emitter->buffer.setFromInterleaved(reinterpret_cast<const short*>(data), length, channels);
 			emitter->buffer.multiply(0.0001);
 			mixerShared.add(emitter);
+
 			api->godot_pool_byte_array_read_access_destroy(read_access);
 			api->godot_pool_byte_array_destroy(&pool);
 		}
@@ -108,10 +129,11 @@ namespace vaeg {
 		) {
 			auto instance = reinterpret_cast<Emitter*>(user_data);
 			// godot_variant ret;
-			// vaeg::api->godot_variant_new_nil(&ret);
-			// vaeg::api->godot_variant_as_pool_byte_array()
 			// vaeg::api->godot_variant_new_object(&ret, instance->sample_ref);
+			// vaeg::api->godot_variant_new_nil(&ret);
 			return instance->sample_var;
+			// vaeg::api->godot_variant_as_pool_byte_array()
+			// return instance->sample_var;
 		}
 
 		Emitter() { }
@@ -130,6 +152,7 @@ namespace vaeg {
 		bool running = true;
 		bool threadExited = false;
 		Mixer() {
+			return;
 			auto& backend = Backend::instance();
 
 			vae::core::Device::SyncCallback callback =
@@ -175,12 +198,12 @@ namespace vaeg {
 		}
 
 		~Mixer() {
-			running = false;
-			while (!threadExited)
-			{
-			}
-			device->closeDevice();
-			delete device;
+			// running = false;
+			// while (!threadExited)
+			// {
+			// }
+			// // device->closeDevice();
+			// delete device;
 		}
 	};
 

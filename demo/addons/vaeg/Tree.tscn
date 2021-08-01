@@ -1,0 +1,81 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "tool
+extends Tree
+
+var base_node: Node;
+var editor: EditorInterface
+
+var paths = []
+
+	
+func _ready():
+	set_name(\"EditorInspector\")
+	set_process_input(true)
+	set_process(true)
+	_on_Button_pressed()
+	
+
+
+func add(tree: TreeItem, node: Node):
+	var name = node.get_name()
+	var cl = node.get_class()
+	if (name == \"EditorInspector\"):
+		return;
+	
+	if cl.find(\"Dialog\") != -1:
+		return;
+		
+	if cl.find(\"Popup\") != -1:
+		return;
+		
+	
+	var child = create_item(tree)
+	child.set_text(0, cl)
+	child.set_text(1, name)
+	child.set_metadata(0, node)
+	if node is Control:
+		var test: Control = node;
+		child.set_text(2, test.hint_tooltip)
+	
+	for i in node.get_children():
+		add(child, i)
+
+func _on_Button_pressed():
+	clear()
+	paths = []
+	var tree = create_item()
+	tree.set_text(0, \"root\")
+	tree.set_text(1, \"root\")
+	if !base_node:
+		return
+	add(tree, base_node)
+
+
+func _on_EditorInspector_item_activated():
+	var node = get_selected().get_metadata(0)
+	editor.inspect_object(node)
+"
+
+[node name="EditorInspector" type="Tree"]
+anchor_right = 0.359
+anchor_bottom = 0.47
+margin_top = -1.33484
+margin_right = 457.384
+margin_bottom = 171.665
+columns = 3
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+margin_left = 744.173
+margin_top = 2.00227
+margin_right = 821.173
+margin_bottom = 26.0023
+text = "Update"
+
+[connection signal="item_activated" from="." to="." method="_on_EditorInspector_item_activated"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
