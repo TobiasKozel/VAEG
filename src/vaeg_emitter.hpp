@@ -55,8 +55,7 @@ namespace vaeg {
 		bool loop = false;
 		size_t time = 0;
 		int rid = 0;
-		godot_variant sample_var;
-		godot_pool_byte_array pool;
+		godot_variant sample;
 
 		VAEG_CLASS(Emitter)
 		VAEG_SETGET(Emitter, playing, bool)
@@ -70,33 +69,21 @@ namespace vaeg {
 				handle, Emitter, sample_ref, object, nullptr,
 				GODOT_PROPERTY_HINT_RESOURCE_TYPE, "AudioStreamSample"
 			)
+			VAEG_REGISTER_METHOD(handle, Emitter, do_some)
+
 			get_buffer_data_bind = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
 			get_rid_bind = api->godot_method_bind_get_method("Resource", "get_rid");
 			get_id_bind = api->godot_method_bind_get_method("RID", "get_id");
 			// VAEG_REGISTER_METHOD(Emitter, set_stream)
 		}
 
-		//static inline Object *___get_from_variant(Variant a) { godot_object *o = (godot_object*) a; return (o) ? (Object *) godot::nativescript_1_1_api->godot_nativescript_get_instance_binding_data(godot::_RegisterState::language_index, o) : nullptr; }
+		VAEG_FUNC(Emitter, do_some) {
+			godot_variant ret;
+			api->godot_variant_new_nil(&ret);
+			return ret;
+		}
 
-		static void _set_sample_ref(
-			godot_object* instance_pointer, void* method_data,
-			void* user_data, godot_variant* value
-		) {
-			auto emitter = reinterpret_cast<Emitter*>(user_data);
-
-			if (!value) {
-				emitter->buffer.resize(0);
-				return;
-			}
-
-			api->godot_variant_new_copy(&emitter->sample_var, value);
-			godot_object* sample_ref;
-			sample_ref = vaeg::api->godot_variant_as_object(&emitter->sample_var);
-
-
-
-
-			const void* no_args[1] = { };
+		VAEG_SET(Emitter, sample_ref, object) {
 			// godot_rid rid_object;
 			// api->godot_rid_new(&rid_object);
 			// api->godot_method_bind_ptrcall(get_rid_bind, value, no_args, &rid_object);
@@ -106,39 +93,36 @@ namespace vaeg {
 			// 	return;
 			// }
 
+			api->godot_variant_new_object(&sample, parameter);
+
 			godot_pool_byte_array pool;
 			api->godot_pool_byte_array_new(&pool);
-			api->godot_method_bind_ptrcall(get_buffer_data_bind, sample_ref, no_args, &pool);
+			const void* no_args[1] = { };
+			api->godot_method_bind_ptrcall(get_buffer_data_bind, parameter, no_args, &pool);
 			godot_int size = api->godot_pool_byte_array_size(&pool);
 			const int channels = 2;
 			const int length = size / (channels * 2);
 			godot_pool_byte_array_read_access* read_access = api->godot_pool_byte_array_read(&pool);
 			const uint8_t* data = api->godot_pool_byte_array_read_access_ptr(read_access);
 
-			mixerShared.remove(emitter);
-			emitter->buffer.resize(length, 2);
-			emitter->buffer.setFromInterleaved(reinterpret_cast<const short*>(data), length, channels);
-			emitter->buffer.multiply(0.0001);
-			mixerShared.add(emitter);
+			mixerShared.remove(this);
+			buffer.resize(length, 2);
+			buffer.setFromInterleaved(reinterpret_cast<const short*>(data), length, channels);
+			buffer.multiply(0.0001f);
+			mixerShared.add(this);
 
 			api->godot_pool_byte_array_read_access_destroy(read_access);
 			api->godot_pool_byte_array_destroy(&pool);
 		}
-		static godot_variant _get_sample_ref(
-			godot_object* instance_pointer, void* method_data, void* user_data
-		) {
-			auto instance = reinterpret_cast<Emitter*>(user_data);
-			// godot_variant ret;
-			// vaeg::api->godot_variant_new_object(&ret, instance->sample_ref);
-			// vaeg::api->godot_variant_new_nil(&ret);
-			return instance->sample_var;
-			// vaeg::api->godot_variant_as_pool_byte_array()
-			// return instance->sample_var;
+
+		VAEG_GET(Emitter, sample_ref) {
+			return sample;
 		}
 
 		Emitter() { }
 
 		~Emitter() {
+			api->godot_variant_destroy(&sample);
 			mixerShared.remove(this);
 		}
 	};

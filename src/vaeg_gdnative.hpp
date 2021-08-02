@@ -21,8 +21,7 @@ namespace vaeg {
 #define VAEG_ERROR(message) 													\
 vaeg::api->godot_print_error(message, __PRETTY_FUNCTION__, __FILE__, __LINE__);
 
-#define VAEG_PRINT(message) 								\
-{															\
+#define VAEG_PRINT(message) {								\
 	godot_string string;									\
 	vaeg::api->godot_string_new(&string);					\
 	vaeg::api->godot_string_parse_utf8(&string, message);	\
@@ -93,6 +92,7 @@ enum VAEG_TYPE {
 
 /**
  * Add Static constructor destrouctor using the godot api
+ * and a member variable with a pointer to the godot_object which the script is attached to
  */
 #define VAEG_CLASS(name)																					\
 	godot_object* instance = nullptr;																		\
@@ -112,7 +112,7 @@ public:																										\
 	}
 
 /**
- * Adds getter and setter functions
+ * Generates generic setter and getter for a property to a class
  */
 #define VAEG_SETGET(p_name, p_prop, p_type)									\
 public:																		\
@@ -134,8 +134,45 @@ public:																		\
 		return ret;															\
 	}
 
+#define VAEG_SET(p_class, p_prop, p_typ)									\
+public:																		\
+	static void _set ## _ ## p_prop ## (									\
+		godot_object*, void*, void* user_data, godot_variant* value			\
+	) {																		\
+		auto instance = reinterpret_cast<p_class*>(user_data);				\
+		auto obj = vaeg::api->godot_variant_as_ ## p_typ ## (value);		\
+		instance->set ## _ ## p_prop ## (obj);								\
+	}																		\
+	void set ## _ ## p_prop ##(godot_ ## p_typ ## * parameter)
+
+
+#define VAEG_GET(p_class, p_prop)									\
+public:																		\
+	static godot_variant _get ## _ ## p_prop ##(							\
+		godot_object*, void*, void* user_data								\
+	) {																		\
+		auto instance = reinterpret_cast<p_class*>(user_data);				\
+		return instance->set ## _ ## p_prop ##();							\
+	}																		\
+	godot_variant set ## _ ## p_prop ##()
+
+/**
+ * Generate function head and wrap static call to object
+ * used in class
+ */
+#define VAEG_FUNC(p_class, p_name)													\
+public:																				\
+	static godot_variant _ ## p_name ## (											\
+		godot_object*, void*, void* user_data, int num_args, godot_variant** args	\
+	) {																				\
+		auto obj = reinterpret_cast<p_class*>(user_data);							\
+		return obj->p_name(num_args, args);											\
+	}																				\
+	godot_variant p_name(int num_args, godot_variant** args)
+
 /**
  * Register class to godot api
+ * used in init_gdnative
  */
 #define VAEG_REGISTER_CLASS(p_name, p_base)					\
 vaeg::nativescript_api->godot_nativescript_register_class(	\
@@ -147,27 +184,34 @@ p_name::_register(handle);
 
 
 /**
- * Register a static function on a class
+ * Register a function on a class
+ * used in _register function of class
  */
-#define VAEG_REGISTER_METHOD(handle, name, function)			\
+#define VAEG_REGISTER_METHOD(p_handle, p_class, p_name)			\
 {																\
-	godot_instance_method name ## _ ## function = { };			\
-	name ## _ ## function.method = &name::function;				\
+	godot_instance_method p_class ## _ ## p_name = { };			\
+	p_class ## _ ## p_name.method = &p_class:: ## _ ## p_name;	\
 	vaeg::nativescript_api->godot_nativescript_register_method(	\
-		handle, #name, #function,								\
+		p_handle, #p_class, #p_name,							\
 		{ GODOT_METHOD_RPC_MODE_DISABLED },						\
-		name ## _ ## function									\
+		p_class ## _ ## p_name									\
 	);															\
 }
 
-#define VAEG_REGISTER_PROP(handle, p_name, p_prop, p_type, p_init) \
+/**
+ * Register a property on a class
+* Needs to have setters and getters generated with VAEG_SETGET
+ * used in _register function of class
+ */
+#define VAEG_REGISTER_PROP(handle, p_name, p_prop, p_type, p_init)	\
 VAEG_REGISTER_PROP_HINT(											\
 	handle, p_name, p_prop, p_type, p_init,							\
 	GODOT_PROPERTY_HINT_NONE, ""									\
 )
 /**
- * Register a property of a class
- * Needs to have setters and getters
+ * Register a property of a class with type hint for the inspector
+ * Needs to have setters and getters generated with VAEG_SETGET
+ * used in _register function of class
  */
 #define VAEG_REGISTER_PROP_HINT(handle, p_name, p_prop, p_type, p_init, p_hint_t, p_hint) 	\
 {																							\
@@ -193,6 +237,7 @@ VAEG_REGISTER_PROP_HINT(											\
 	vaeg::nativescript_api->godot_nativescript_register_property(							\
 		handle, #p_name, #p_prop, &attr, set_func, get_func									\
 	);																						\
+	vaeg::api->godot_string_destroy(&hint);												\
 }
 
 extern "C" void GDN_EXPORT godot_nativescript_init(void* handle) {
