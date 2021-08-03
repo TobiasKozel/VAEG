@@ -57,42 +57,34 @@ namespace vaeg {
 		int rid = 0;
 		godot_variant sample;
 
-		VAEG_CLASS(Emitter)
-		VAEG_SETGET(Emitter, playing, bool)
-		VAEG_SETGET(Emitter, loop, bool)
+		VAEG_SETGET(playing, bool)
+		VAEG_SETGET(loop, bool)
 		// VAEG_SETGET(Emitter, sample_ref, object)
 
-		static void _register(void* handle) {
-			VAEG_REGISTER_PROP(handle, Emitter, playing, bool, false)
-			VAEG_REGISTER_PROP(handle, Emitter, loop, bool, false)
-			VAEG_REGISTER_PROP_HINT(
-				handle, Emitter, sample_ref, object, nullptr,
-				GODOT_PROPERTY_HINT_RESOURCE_TYPE, "AudioStreamSample"
-			)
-			VAEG_REGISTER_METHOD(handle, Emitter, do_some)
-
-			get_buffer_data_bind = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
-			get_rid_bind = api->godot_method_bind_get_method("Resource", "get_rid");
-			get_id_bind = api->godot_method_bind_get_method("RID", "get_id");
-			// VAEG_REGISTER_METHOD(Emitter, set_stream)
+		Emitter() {
+			api->godot_variant_new_nil(&sample);
 		}
 
-		VAEG_FUNC(Emitter, do_some) {
+		VAEG_REGISTER_CLASS(Emitter, Spatial) {
+			VAEG_REGISTER_PROP(playing, bool, false)
+			VAEG_REGISTER_PROP(loop, bool, false)
+			VAEG_REGISTER_PROP_HINT(
+				sample_ref, object, nullptr,
+				GODOT_PROPERTY_HINT_RESOURCE_TYPE, "AudioStreamSample"
+			)
+			VAEG_REGISTER_METHOD(do_some)
+
+			get_buffer_data_bind = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
+		}
+
+		VAEG_FUNC(do_some) {
 			godot_variant ret;
 			api->godot_variant_new_nil(&ret);
 			return ret;
 		}
 
-		VAEG_SET(Emitter, sample_ref, object) {
-			// godot_rid rid_object;
-			// api->godot_rid_new(&rid_object);
-			// api->godot_method_bind_ptrcall(get_rid_bind, value, no_args, &rid_object);
-			// int new_rid;
-			// api->godot_method_bind_ptrcall(get_id_bind, &rid_object, no_args, &new_rid);
-			// if (new_rid == emitter->rid) {
-			// 	return;
-			// }
-
+		VAEG_SET(sample_ref, object) {
+			api->godot_variant_destroy(&sample);
 			api->godot_variant_new_object(&sample, parameter);
 
 			godot_pool_byte_array pool;
@@ -115,11 +107,9 @@ namespace vaeg {
 			api->godot_pool_byte_array_destroy(&pool);
 		}
 
-		VAEG_GET(Emitter, sample_ref) {
+		VAEG_GET(sample_ref) {
 			return sample;
 		}
-
-		Emitter() { }
 
 		~Emitter() {
 			api->godot_variant_destroy(&sample);
@@ -133,18 +123,12 @@ namespace vaeg {
 
 		Device* device = nullptr;
 		size_t time = 0;
-		bool running = true;
-		bool threadExited = false;
+
 		Mixer() {
-			return;
 			auto& backend = Backend::instance();
 
 			vae::core::Device::SyncCallback callback =
 			[&](const vae::core::Device::AudioBuffer& fromDevice, vae::core::Device::AudioBuffer& toDevice) {
-				if (!running) {
-					threadExited = true;
-					return;
-				}
 				toDevice.set(0.0f);
 				const size_t samples = toDevice.validSize();
 				mixerShared.lock();

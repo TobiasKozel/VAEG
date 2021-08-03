@@ -2,5 +2,5 @@
 #include "./vaeg_emitter.hpp"
 
 void vaeg::init_gdnative(void* handle) {
-	VAEG_REGISTER_CLASS(Emitter, Spatial)
+	Emitter::_register(handle);
 }
