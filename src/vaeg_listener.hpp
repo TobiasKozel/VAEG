@@ -1,8 +1,16 @@
+#ifndef VAEG_LISTENER
+#define VAEG_LISTENER
 
+#include "./vaeg_gdnative.hpp"
+namespace vaeg {
 
-#include <Godot.hpp>
-#include <Spatial.hpp>
+	struct Listener {
+		VAEG_REGISTER_CLASS(Listener, Spatial) {
 
-namespace godot {
-	
+		}
+
+	};
 }
+
+
+#endif // VAEG_LISTENER

@@ -16,6 +16,7 @@
 				"C:/dev/git/master/VAEG/demo",
 				"--remote-debug",
 				"127.0.0.1:6007",
+				"--verbose"
 			],
 			"symbolOptions": {
 				"searchPaths": [],
@@ -52,7 +53,15 @@
 			"name": "(Windows) Attach",
 			"type": "cppvsdbg",
 			"request": "attach",
-			"processId": "${command:pickProcess}"
+			"processId": "${command:pickProcess}",
+			"symbolSearchPath": "${workspaceFolder}/demo/addons/vaeg/bin/win64/;C:/dev/git/master/godot/bin/",
+			"symbolOptions": {
+				"searchPaths": [
+					"${workspaceFolder}/demo/addons/vaeg/bin/win64/",
+					"C:/dev/git/master/godot/bin/"
+				],
+				"searchMicrosoftSymbolServer": false
+			},
 		},
 		{
 			"name": "(gdb) Attach x11",

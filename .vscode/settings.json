@@ -74,6 +74,15 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "xlocale": "cpp",
+        "xutility": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xtr1common": "cpp",
+        "xtree": "cpp",
+        "format": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp"
     }
 }

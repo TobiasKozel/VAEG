@@ -13,38 +13,8 @@
 namespace vaeg {
 	struct Emitter;
 
-	class MixerShared {
-		using Mutex = tklb::SpinLock;
-		using Emitters = tklb::HeapBuffer<Emitter*>;
-		Emitters emitters;
-		Mutex mutex;
 
-	public:
 
-		void add(Emitter* e) {
-			Mutex::Lock lock(mutex);
-			emitters.push(e);
-		}
-
-		void remove(Emitter* e) {
-			Mutex::Lock lock(mutex);
-			emitters.remove(e);
-		}
-
-		void lock() {
-			mutex.lock();
-		}
-
-		void unlock() {
-			mutex.unlock();
-		}
-
-		Emitters& get_emitters() {
-			return emitters;
-		}
-	};
-
-	MixerShared mixerShared;
 	godot_method_bind* get_buffer_data_bind;
 	godot_method_bind* get_rid_bind;
 	godot_method_bind* get_id_bind;
@@ -100,7 +70,8 @@ namespace vaeg {
 			mixerShared.remove(this);
 			buffer.resize(length, 2);
 			buffer.setFromInterleaved(reinterpret_cast<const short*>(data), length, channels);
-			buffer.multiply(0.0001f);
+			// buffer.multiply(0.0001f);
+			buffer.multiply(1.0 / 32768.0);
 			mixerShared.add(this);
 
 			api->godot_pool_byte_array_read_access_destroy(read_access);
@@ -116,66 +87,6 @@ namespace vaeg {
 			mixerShared.remove(this);
 		}
 	};
-
-	struct Mixer {
-		using Backend = vae::core::BackendRtAudio;
-		using Device = vae::core::DeviceRtaudio;
-
-		Device* device = nullptr;
-		size_t time = 0;
-
-		Mixer() {
-			auto& backend = Backend::instance();
-
-			vae::core::Device::SyncCallback callback =
-			[&](const vae::core::Device::AudioBuffer& fromDevice, vae::core::Device::AudioBuffer& toDevice) {
-				toDevice.set(0.0f);
-				const size_t samples = toDevice.validSize();
-				mixerShared.lock();
-				auto& emitters = mixerShared.get_emitters();
-				const int count =  emitters.size();
-				for (int index = 0; index < count; index++) {
-					auto& i = emitters[index];
-					if (!i->playing) { continue; }
-					const size_t startTime = i->time;
-					const auto& buffer = i->buffer;
-					const size_t totalLength = buffer.size();
-					const size_t length = std::min(samples, totalLength - startTime);
-					for (int c = 0; c < toDevice.channels(); c++) {
-						int channel = c % buffer.channels();
-						for (size_t s = 0; s < length; s++) {
-							toDevice[c][s] += buffer[c][startTime + s];
-						}
-					}
-					if (totalLength <= startTime + length) {
-						i->time = 0;;
-						if (!i->loop) {
-							// stop if not looping
-							i->playing = false;
-						}
-					} else {
-						i->time = startTime + length;
-					}
-				}
-				mixerShared.unlock();
-
-				time += samples;
-			};
-			device = new Device(callback); // sync output device
-			device->openDevice();
-		}
-
-		~Mixer() {
-			// running = false;
-			// while (!threadExited)
-			// {
-			// }
-			// // device->closeDevice();
-			// delete device;
-		}
-	};
-
-	Mixer MainMixer;
 }
 
 #endif // VAEG_EMITTER

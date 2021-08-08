@@ -208,24 +208,29 @@ VAEG_REGISTER_PROP_HINT(							\
 /**
  * Generates generic setter and getter for a property to a class
  */
-#define VAEG_SETGET(p_prop, p_type)											\
-public:																		\
-	/** Generated setter */													\
-	static void _set_ ##p_prop(												\
-		godot_object* instance_pointer, void* method_data,					\
-		void* user_data, godot_variant* value								\
-	) {																		\
-		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);		\
-		instance->p_prop = vaeg::api->godot_variant_as_ ## p_type (value);	\
-	}																		\
-	/** Generated getter */													\
-	static godot_variant _get_ ##p_prop(									\
-		godot_object* instance_pointer, void* method_data, void* user_data	\
-	) {																		\
-		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);		\
-		godot_variant ret;													\
-		vaeg::api->godot_variant_new_ ## p_type (&ret, instance->p_prop);	\
-		return ret;															\
+#define VAEG_SETGET(p_prop, p_type) VAEG_SETGET_LOC(p_prop, p_type, p_prop)
+
+/**
+ * Generates generic setter and getter for a property to a class
+ */
+#define VAEG_SETGET_LOC(p_prop, p_type, p_location)								\
+public:																			\
+	/** Generated setter */														\
+	static void _set_ ##p_prop(													\
+		godot_object* instance_pointer, void* method_data,						\
+		void* user_data, godot_variant* value									\
+	) {																			\
+		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);			\
+		instance->p_location = vaeg::api->godot_variant_as_ ## p_type (value);	\
+	}																			\
+	/** Generated getter */														\
+	static godot_variant _get_ ##p_prop(										\
+		godot_object* instance_pointer, void* method_data, void* user_data		\
+	) {																			\
+		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);			\
+		godot_variant ret;														\
+		vaeg::api->godot_variant_new_ ## p_type (&ret, instance->p_location);	\
+		return ret;																\
 	}
 
 /**
