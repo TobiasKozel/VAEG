@@ -3,6 +3,7 @@
 [ext_resource path="res://addons/vaeg/bin/vaeg.gdnlib" type="GDNativeLibrary" id=1]
 
 [resource]
-resource_name = "vaeg"
 class_name = "Emitter"
 library = ExtResource( 1 )
+script_class_name = "EmitterScript"
+script_class_icon_path = "res://addons/vaeg/bin/classes/emitter.svg"

@@ -1,13 +1,13 @@
 /**
  * Some boilerplate code for gdnative
- * Absolute macro madness which in no way resemples
- * good practice but is easy to write
+ * Absolute macro madness which isn't nearly as
+ * clean as the gdnative c++ bindings but not as heavy
  */
 
 #ifndef VAEG_GDNATIVE
 #define VAEG_GDNATIVE
 
-#include <new>
+#include <new> // Needed for placement new
 #include <gdnative_api_struct.gen.h>
 
 namespace vaeg {
@@ -43,7 +43,6 @@ extern "C" void GDN_EXPORT godot_gdnative_init(godot_gdnative_init_options* opti
 			default: break;
 		};
 	};
-	VAEG_PRINT("Init VAEG")
 }
 
 extern "C" void GDN_EXPORT godot_gdnative_terminate(godot_gdnative_terminate_options *p_options) {
@@ -114,7 +113,7 @@ enum VAEG_TYPE {
 #define VAEG_REGISTER_CLASS(p_class, p_base)																\
 	godot_object* instance = nullptr;																		\
 	using VAEG_CLASS_TYPE = p_class;																		\
-	static constexpr char* VAEG_NAME = #p_class;															\
+	static constexpr const char* VAEG_NAME = #p_class;														\
 public:																										\
 	/** Generated Constructor */																			\
 	static GDCALLINGCONV void* _construct(godot_object* p_instance, void* p_method_data) {					\
@@ -129,7 +128,7 @@ public:																										\
 		instance->~VAEG_CLASS_TYPE();																		\
 		vaeg::api->godot_free(p_user_data);																	\
 	}																										\
-	static void __register(void* handle) {																	\
+	static void _register(void* handle) {																	\
 		vaeg::nativescript_api->godot_nativescript_register_class(											\
 			handle, VAEG_NAME, #p_base,																		\
 			{ &VAEG_CLASS_TYPE::_construct, NULL, NULL },													\
@@ -137,7 +136,7 @@ public:																										\
 		);																									\
 		__register(handle);																					\
 	}																										\
-	static void _register(void* handle)
+	static void __register(void* handle)
 
 
 /**
@@ -147,7 +146,7 @@ public:																										\
 #define VAEG_REGISTER_METHOD(p_name)							\
 {																\
 	godot_instance_method _ ## p_name = { };					\
-	_ ## p_name.method = &VAEG_CLASS_TYPE:: ## _ ## p_name;		\
+	_ ## p_name.method = &VAEG_CLASS_TYPE::_ ## p_name;			\
 	vaeg::nativescript_api->godot_nativescript_register_method(	\
 		handle, VAEG_NAME, #p_name,								\
 		{ GODOT_METHOD_RPC_MODE_DISABLED },						\
@@ -171,31 +170,33 @@ VAEG_REGISTER_PROP_HINT(							\
  * Needs to have setters and getters generated with VAEG_SETGET
  * used in _register function of class
  */
-#define VAEG_REGISTER_PROP_HINT(p_prop, p_type, p_init, p_hint_t, p_hint) 			\
-{																							\
-	godot_property_attributes attr = { };													\
-	attr.rset_type = GODOT_METHOD_RPC_MODE_DISABLED;										\
-	attr.usage = GODOT_PROPERTY_USAGE_DEFAULT;												\
-	attr.type = VAEG_TYPE::godot_variant_type_ ## p_type;									\
-	attr.hint = p_hint_t;																	\
-	godot_string hint;																		\
-	vaeg::api->godot_string_new(&hint);														\
-	vaeg::api->godot_string_parse_utf8(&hint, p_hint);										\
-	attr.hint_string = hint;																\
-	godot_variant init;																		\
-	vaeg::api->godot_variant_new_ ## p_type (&init, p_init);								\
-	godot_property_set_func set_func = { };													\
-	set_func.method_data = NULL;															\
-	set_func.free_func = NULL;																\
-	set_func.set_func = VAEG_CLASS_TYPE::_set_ ##p_prop;									\
-	godot_property_get_func get_func = { };													\
-	get_func.method_data = NULL;															\
-	get_func.free_func = NULL;																\
-	get_func.get_func = VAEG_CLASS_TYPE::_get_ ##p_prop;									\
-	vaeg::nativescript_api->godot_nativescript_register_property(							\
-		handle, VAEG_NAME, #p_prop, &attr, set_func, get_func								\
-	);																						\
-	vaeg::api->godot_string_destroy(&hint);													\
+#define VAEG_REGISTER_PROP_HINT(p_prop, p_type, p_init, p_hint_t, p_hint) 	\
+{																			\
+	godot_property_attributes attr = { };									\
+	attr.rset_type = GODOT_METHOD_RPC_MODE_DISABLED;						\
+	attr.usage = godot_property_usage_flags(								\
+		GODOT_PROPERTY_USAGE_DEFAULT | GODOT_PROPERTY_USAGE_SCRIPT_VARIABLE	\
+	);																		\
+	attr.type = VAEG_TYPE::godot_variant_type_ ## p_type;					\
+	attr.hint = p_hint_t;													\
+	godot_string hint;														\
+	vaeg::api->godot_string_new(&hint);										\
+	vaeg::api->godot_string_parse_utf8(&hint, p_hint);						\
+	attr.hint_string = hint;												\
+	godot_variant init;														\
+	vaeg::api->godot_variant_new_ ## p_type (&init, p_init);				\
+	godot_property_set_func set_func = { };									\
+	set_func.method_data = NULL;											\
+	set_func.free_func = NULL;												\
+	set_func.set_func = VAEG_CLASS_TYPE::_set_ ##p_prop;					\
+	godot_property_get_func get_func = { };									\
+	get_func.method_data = NULL;											\
+	get_func.free_func = NULL;												\
+	get_func.get_func = VAEG_CLASS_TYPE::_get_ ##p_prop;					\
+	vaeg::nativescript_api->godot_nativescript_register_property(			\
+		handle, VAEG_NAME, #p_prop, &attr, set_func, get_func				\
+	);																		\
+	vaeg::api->godot_string_destroy(&hint);									\
 }
 
 /**
@@ -216,7 +217,7 @@ VAEG_REGISTER_PROP_HINT(							\
 #define VAEG_SETGET_LOC(p_prop, p_type, p_location)								\
 public:																			\
 	/** Generated setter */														\
-	static void _set_ ##p_prop(													\
+	static void _set_ ## p_prop(												\
 		godot_object* instance_pointer, void* method_data,						\
 		void* user_data, godot_variant* value									\
 	) {																			\
@@ -237,43 +238,43 @@ public:																			\
  * Generates function head to a godot setter function and
  * casts the parameter to the correct type
  */
-#define VAEG_SET(p_prop, p_typ)												\
-public:																		\
-	static void _set ## _ ## p_prop ## (									\
-		godot_object*, void*, void* user_data, godot_variant* value			\
-	) {																		\
-		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);		\
-		auto obj = vaeg::api->godot_variant_as_ ## p_typ ## (value);		\
-		instance->set ## _ ## p_prop ## (obj);								\
-	}																		\
-	void set ## _ ## p_prop ##(godot_ ## p_typ ## * parameter)
+#define VAEG_SET(p_prop, p_type, p_parameter)							\
+public:																	\
+	static void _set_ ## p_prop (										\
+		godot_object*, void*, void* user_data, godot_variant* value		\
+	) {																	\
+		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);	\
+		auto obj = vaeg::api->godot_variant_as_ ## p_type (value);		\
+		instance->set_ ## p_prop (obj);									\
+	}																	\
+	void set_ ## p_prop (p_parameter)
 
 /**
  * Generates a function head to retrieve a value
  */
-#define VAEG_GET(p_prop)											\
-public:																		\
-	static godot_variant _get ## _ ## p_prop ##(							\
-		godot_object*, void*, void* user_data								\
-	) {																		\
-		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);		\
-		return instance->set ## _ ## p_prop ##();							\
-	}																		\
-	godot_variant set ## _ ## p_prop ##()
+#define VAEG_GET(p_prop)												\
+public:																	\
+	static godot_variant _get_ ## p_prop (								\
+		godot_object*, void*, void* user_data							\
+	) {																	\
+		auto instance = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);	\
+		return instance->set_ ## p_prop ();								\
+	}																	\
+	godot_variant set_ ## p_prop ()
 
 /**
  * Generate function head and wrap static call to object
  * used in class
  */
-#define VAEG_FUNC(p_name)															\
+#define VAEG_FUNC(p_name, p_num_args, p_args)										\
 public:																				\
-	static godot_variant _ ## p_name ## (											\
+	static godot_variant _ ## p_name (												\
 		godot_object*, void*, void* user_data, int num_args, godot_variant** args	\
 	) {																				\
 		auto obj = reinterpret_cast<VAEG_CLASS_TYPE*>(user_data);					\
 		return obj->p_name(num_args, args);											\
 	}																				\
-	godot_variant p_name(int num_args, godot_variant** args)
+	godot_variant p_name(p_num_args, p_args)
 
 
 #endif // VAEG_GDNATIVE

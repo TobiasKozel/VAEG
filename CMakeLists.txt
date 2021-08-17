@@ -9,7 +9,7 @@ project(
 
 if(MSVC)
 	set(VAEG_WIN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/demo/addons/vaeg/bin/win64/)
-	# Don't put the dll in subfolders based on config
+	# Don't put the dll in subfolders based on build config
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${VAEG_WIN_PATH})
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${VAEG_WIN_PATH})
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${VAEG_WIN_PATH})
@@ -32,8 +32,9 @@ file(GLOB SRC_CORE "src/*.cpp")
 
 # we want everything to be linked into a single file
 # TODO doesn't build with off for some reason
-set(VAE_BUILD_STATIC_LIBS ON)
 
+set(VAE_BUILD_STATIC_LIBS ON)
+set(VAE_PROFILER ON)
 add_subdirectory(VAE)
 
 add_library(vaeg SHARED ${SRC_CORE})

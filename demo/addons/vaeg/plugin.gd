@@ -14,13 +14,23 @@ func _enter_tree():
 	tree.editor = editor
 	add_control_to_bottom_panel(tree, "Tree")
 	editor.inspect_object(tree)
-	
+
 	add_custom_type(
-		"CustomAudioSource",
-		"Node2D",
-		preload("res://addons/vaeg/custom_audio_source.gd"),
-		preload("res://icon.png")
+		"Emitter",
+		"Spatial",
+		preload("res://addons/vaeg/bin/classes/emitter.gdns"),
+		preload("res://addons/vaeg/bin/classes/emitter.svg")
 	)
+
+	# Disable internal audio anywhere but the editor
+	# TODO still applied in the editor :/
+	#if ProjectSettings.get_setting("audio/driver") != "Dummy":
+	#	ProjectSettings.set_setting("audio/driver", "Dummy")
+	#	ProjectSettings.set_setting("audio/driver.editor", "")
+	#if ProjectSettings.get_setting("audio/mix_rate") > 100:
+	#	ProjectSettings.set_setting("audio/mix_rate", 100)
+	#	ProjectSettings.set_setting("audio/mix_rate.editor", 44100)
+
 
 func _exit_tree():
 	remove_control_from_bottom_panel(dock)

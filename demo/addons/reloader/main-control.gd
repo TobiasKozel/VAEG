@@ -3,6 +3,8 @@ extends Panel
 
 const plugin_name = "vaeg"
 
+var listening = false
+
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -23,6 +25,10 @@ func _input(event):
 				var base = editor_interface.get_base_control()
 				var parent = base.get_parent()
 				parent = parent.get_parent()
-				print(parent)
-				parent.emit_signal("play_pressed")
-			#	editor_interface.inspect_object(editor_interface.get_base_control())
+				if !listening:
+					listening = true
+					print("Started remote debugger")
+					parent.emit_signal("play_pressed")
+				else:
+					parent.emit_signal("stop_pressed")
+					listening = false

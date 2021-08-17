@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Spatial",
+"class": "EmitterScript",
+"language": "NativeScript",
+"path": "res://addons/vaeg/bin/classes/emitter.gdns"
+} ]
+_global_script_class_icons={
+"EmitterScript": "res://addons/vaeg/bin/classes/emitter.svg"
+}
+
 [application]
 
 config/name="demo-project"
@@ -16,7 +26,11 @@ config/icon="res://icon.png"
 
 [audio]
 
-driver=""
+driver="Dummy"
+mix_rate=100
+channel_disable_time=1.06
+driver.editor=""
+mix_rate.editor=44100
 
 [editor_plugins]
 

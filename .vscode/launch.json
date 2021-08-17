@@ -13,7 +13,7 @@
 			"args": [
 				"${workspaceFolder}/demo/main.tscn",
 				"--path",
-				"C:/dev/git/master/VAEG/demo",
+				"${workspaceFolder}/demo",
 				"--remote-debug",
 				"127.0.0.1:6007",
 				"--verbose"
@@ -98,6 +98,11 @@
 				}
 			],
 			"args": [
+				"--path",
+				"${workspaceFolder}/demo",
+				"--remote-debug",
+				"127.0.0.1:6007",
+				"--verbose",
 				"${workspaceFolder}/demo/main.tscn"
 			]
 		},
@@ -164,6 +169,10 @@
 				}
 			],
 			"args": [
+				"--path",
+				"${workspaceFolder}/demo",
+				"--remote-debug",
+				"127.0.0.1:6007",
 				"${workspaceFolder}/demo/project.godot"
 			]
 		}
