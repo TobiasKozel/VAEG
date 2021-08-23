@@ -111,7 +111,7 @@ enum VAEG_TYPE {
  * and a member variable with a pointer to the godot_object which the script is attached to
  */
 #define VAEG_REGISTER_CLASS(p_class, p_base)																\
-	godot_object* instance = nullptr;																		\
+	godot_object* instance = nullptr; 																		\
 	using VAEG_CLASS_TYPE = p_class;																		\
 	static constexpr const char* VAEG_NAME = #p_class;														\
 public:																										\

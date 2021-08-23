@@ -169,10 +169,6 @@
 				}
 			],
 			"args": [
-				"--path",
-				"${workspaceFolder}/demo",
-				"--remote-debug",
-				"127.0.0.1:6007",
 				"${workspaceFolder}/demo/project.godot"
 			]
 		}

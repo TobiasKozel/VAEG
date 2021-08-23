@@ -26,8 +26,7 @@ config/icon="res://icon.png"
 
 [audio]
 
-driver="Dummy"
-mix_rate=100
+driver=""
 channel_disable_time=1.06
 driver.editor=""
 mix_rate.editor=44100

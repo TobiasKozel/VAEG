@@ -9,6 +9,7 @@ namespace vaeg {
 	godot_method_bind* gdn_bind_get_buffer_data;
 	godot_method_bind* gdn_bind_get_rid;
 	godot_method_bind* gdn_bind_get_id;
+	godot_method_bind* gdn_bind_get_translation;
 
 	struct Emitter {
 		tklb::Handle handle;
@@ -39,16 +40,24 @@ namespace vaeg {
 				GODOT_PROPERTY_HINT_RESOURCE_TYPE,
 				"AudioStreamSample"
 			)
-			// VAEG_REGISTER_METHOD(do_some)
+			VAEG_REGISTER_METHOD(_process)
 
 			gdn_bind_get_buffer_data = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
+			gdn_bind_get_translation = api->godot_method_bind_get_method("Spatial", "get_translation");
 		}
 
-		// VAEG_FUNC(do_some, int num_args, godot_variant** args) {
-		// 	godot_variant ret;
-		// 	api->godot_variant_new_nil(&ret);
-		// 	return ret;
-		// }
+		VAEG_FUNC(_process, int num_args, godot_variant** args) {
+			double delta = api->godot_variant_as_real(args[0]);
+			auto old = emitter->position;
+			const void* no_args[1] = { };
+			api->godot_method_bind_ptrcall(
+				gdn_bind_get_translation, instance, no_args, &emitter->position
+			);
+			emitter->velocity = emitter->position - old;
+			godot_variant ret;
+			api->godot_variant_new_nil(&ret);
+			return ret;
+		}
 
 		VAEG_SET(sample_ref, object, godot_object* parameter) {
 			api->godot_variant_destroy(&sample);
