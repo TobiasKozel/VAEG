@@ -24,9 +24,9 @@ func _enter_tree():
 
 	# Disable internal audio anywhere but the editor
 	# TODO still applied in the editor :/
-	#if ProjectSettings.get_setting("audio/driver") != "Dummy":
-	#	ProjectSettings.set_setting("audio/driver", "Dummy")
-	#	ProjectSettings.set_setting("audio/driver.editor", "")
+	if ProjectSettings.get_setting("audio/driver") != "Dummy":
+		ProjectSettings.set_setting("audio/driver", "Dummy")
+		ProjectSettings.set_setting("audio/driver.editor", "")
 	#if ProjectSettings.get_setting("audio/mix_rate") > 100:
 	#	ProjectSettings.set_setting("audio/mix_rate", 100)
 	#	ProjectSettings.set_setting("audio/mix_rate.editor", 44100)

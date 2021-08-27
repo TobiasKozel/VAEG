@@ -11,7 +11,8 @@ script = ExtResource( 3 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.98996 )
 
 [node name="Emitter" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.505392, 0, 0 )
 script = ExtResource( 1 )
-playing = false
-loop = false
+playing = true
+loop = true
 sample_ref = ExtResource( 2 )

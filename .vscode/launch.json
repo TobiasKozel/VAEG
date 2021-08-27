@@ -34,7 +34,8 @@
 			// "program": "C:/dev/tools/Godot.exe",
 			"program": "C:/dev/git/master/godot/bin/godot.windows.tools.64.exe",
 			"args": [
-				"${workspaceFolder}/demo/project.godot"
+				"${workspaceFolder}/demo/project.godot",
+				"--verbose"
 			],
 			"symbolSearchPath": "${workspaceFolder}/demo/addons/vaeg/bin/win64/;C:/dev/git/master/godot/bin/",
 			"symbolOptions": {

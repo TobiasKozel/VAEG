@@ -91,8 +91,8 @@ namespace vaeg {
 		}
 
 		~Emitter() {
-			api->godot_variant_destroy(&sample);
 			Engine::instance().destroyEmitter(handle);
+			api->godot_variant_destroy(&sample);
 		}
 	};
 }
