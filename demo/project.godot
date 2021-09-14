@@ -9,7 +9,7 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "",
+"base": "Spatial",
 "class": "EmitterScript",
 "language": "NativeScript",
 "path": "res://addons/vaeg/bin/classes/emitter.gdns"

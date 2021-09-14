@@ -41,19 +41,31 @@ namespace vaeg {
 				"AudioStreamSample"
 			)
 			VAEG_REGISTER_METHOD(_process)
+			VAEG_REGISTER_METHOD(_init)
 
 			gdn_bind_get_buffer_data = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
 			gdn_bind_get_translation = api->godot_method_bind_get_method("Spatial", "get_translation");
 		}
 
-		VAEG_FUNC(_process, int num_args, godot_variant** args) {
-			double delta = api->godot_variant_as_real(args[0]);
+		void updateTransform(double delta = 0) {
 			auto old = emitter->position;
 			const void* no_args[1] = { };
 			api->godot_method_bind_ptrcall(
 				gdn_bind_get_translation, instance, no_args, &emitter->position
 			);
 			emitter->velocity = emitter->position - old;
+		}
+
+		VAEG_FUNC(_init, int num_args, godot_variant** args) {
+			updateTransform();
+			godot_variant ret;
+			api->godot_variant_new_nil(&ret);
+			return ret;
+		}
+
+		VAEG_FUNC(_process, int num_args, godot_variant** args) {
+			double delta = api->godot_variant_as_real(args[0]);
+			updateTransform(delta);
 			godot_variant ret;
 			api->godot_variant_new_nil(&ret);
 			return ret;
