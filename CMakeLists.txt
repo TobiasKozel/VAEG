@@ -34,7 +34,7 @@ file(GLOB SRC_CORE "src/*.cpp")
 # TODO doesn't build with off for some reason
 
 set(VAE_BUILD_STATIC_LIBS ON)
-set(VAE_PROFILER ON)
+# set(VAE_PROFILER ON)
 add_subdirectory(VAE)
 
 add_library(vaeg SHARED ${SRC_CORE})

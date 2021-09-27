@@ -14,4 +14,5 @@ func _input(event):
 
 func _process(delta):
 	time += delta
-	$Emitter.translation.x = sin(time * 5) * 4
+	$Emitter.translation.x = sin(time * 3) * 4
+	$Emitter2.translation.x = sin(time * 6) * 4

@@ -92,7 +92,9 @@
 			"xtree": "cpp",
 			"format": "cpp",
 			"xhash": "cpp",
-			"xstring": "cpp"
+			"xstring": "cpp",
+			"xlocbuf": "cpp",
+			"*.inc": "cpp"
 		}
 	}
 }

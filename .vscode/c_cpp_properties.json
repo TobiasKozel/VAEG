@@ -1,28 +1,28 @@
 {
-	"env": {
-		"includes": [
-			"${workspaceFolder}/src",
-			"${workspaceFolder}/godot_headers"
-		]
-	},
-	"configurations": [
-		{
-			"name": "Linux",
-			"intelliSenseMode": "clang-x64",
-			"includePath": [
-				"${includes}"
-			],
-			"cStandard": "c11",
-			"cppStandard": "c++14",
-			"browse": {
-				"path": [
-					"${workspaceFolder}"
-				],
-				"limitSymbolsToIncludedHeaders": true,
-				"databaseFilename": ""
-			},
-			"configurationProvider": "ms-vscode.makefile-tools"
-		}
-	],
-	"version": 4
+    "env": {
+        "includes": [
+            "${workspaceFolder}/src",
+            "${workspaceFolder}/godot_headers"
+        ]
+    },
+    "configurations": [
+        {
+            "name": "Linux",
+            "intelliSenseMode": "clang-x64",
+            "includePath": [
+                "${includes}"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
 }

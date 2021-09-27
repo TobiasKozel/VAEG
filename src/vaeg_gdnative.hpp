@@ -34,7 +34,7 @@ vaeg::api->godot_print_error(message, __PRETTY_FUNCTION__, __FILE__, __LINE__);
 extern "C" void GDN_EXPORT godot_gdnative_init(godot_gdnative_init_options* options) {
 	vaeg::api = options->api_struct;
 
-	for (int i = 0; i < vaeg::api->num_extensions; i++) {
+	for (unsigned int i = 0; i < vaeg::api->num_extensions; i++) {
 		switch (vaeg::api->extensions[i]->type) {
 			case GDNATIVE_EXT_NATIVESCRIPT: {
 				vaeg::nativescript_api =

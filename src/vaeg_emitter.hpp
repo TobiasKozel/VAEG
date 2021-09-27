@@ -13,29 +13,25 @@ namespace vaeg {
 	godot_method_bind* gdn_bind_is_stereo;
 
 	struct Emitter {
-		tklb::Handle handle;
-		vae::core::Emitter* emitter = nullptr;
-		using State = vae::core::Emitter::State;
 		godot_variant sample;
+		vae::core::Emitter emitter;
 
-		VAEG_SETGET_LOC(playing,  bool, emitter->state[State::playing])
-		VAEG_SETGET_LOC(loop,     bool, emitter->state[State::loop])
-		VAEG_SETGET_LOC(killable, bool, emitter->state[State::killable])
-		VAEG_SETGET_LOC(binaural, bool, emitter->state[State::binaural])
-		VAEG_SETGET_LOC(canvirt,  bool, emitter->state[State::canvirt])
+		// VAEG_SETGET_LOC(playing,  bool, emitter->state[State::playing])
+		// VAEG_SETGET_LOC(loop,     bool, emitter->state[State::loop])
+		// VAEG_SETGET_LOC(killable, bool, emitter->state[State::killable])
+		// VAEG_SETGET_LOC(binaural, bool, emitter->state[State::binaural])
+		// VAEG_SETGET_LOC(canvirt,  bool, emitter->state[State::canvirt])
 
-		Emitter() {
-			handle = Engine::instance().createEmitter();
-			emitter = Engine::instance().getEmitter(handle);
+		Emitter() : emitter(Engine::instance().createEmitter()) {
 			api->godot_variant_new_nil(&sample);
 		}
 
 		VAEG_REGISTER_CLASS(Emitter, Spatial) {
-			VAEG_REGISTER_PROP(playing,  bool, false)
-			VAEG_REGISTER_PROP(loop,     bool, false)
-			VAEG_REGISTER_PROP(killable, bool, false)
-			VAEG_REGISTER_PROP(binaural, bool, false)
-			VAEG_REGISTER_PROP(canvirt,  bool, false)
+			// VAEG_REGISTER_PROP(playing,  bool, false)
+			// VAEG_REGISTER_PROP(loop,     bool, false)
+			// VAEG_REGISTER_PROP(killable, bool, false)
+			// VAEG_REGISTER_PROP(binaural, bool, false)
+			// VAEG_REGISTER_PROP(canvirt,  bool, false)
 			VAEG_REGISTER_PROP_HINT(
 				sample_ref, object, nullptr,
 				GODOT_PROPERTY_HINT_RESOURCE_TYPE,
@@ -47,21 +43,20 @@ namespace vaeg {
 			gdn_bind_is_stereo =       api->godot_method_bind_get_method("AudioStreamSample", "is_stereo");
 			gdn_bind_get_buffer_data = api->godot_method_bind_get_method("AudioStreamSample", "get_data");
 			gdn_bind_get_translation = api->godot_method_bind_get_method("Spatial", "get_translation");
-
 		}
 
 		void updateTransform(double delta = 0) {
-			auto old = emitter->position;
 			const void* no_args[1] = { };
+			float position[3];
 			api->godot_method_bind_ptrcall(
-				gdn_bind_get_translation, instance, no_args, &emitter->position
+				gdn_bind_get_translation, instance, no_args, position
 			);
-			emitter->velocity = emitter->position - old;
+			emitter.setPosition(position[0], position[1], position[2], delta);
 		}
 
 		VAEG_FUNC(_ready, int num_args, godot_variant** args) {
 			updateTransform();
-			emitter->state[vae::core::Emitter::ready] = true;
+			emitter.setReady(true);
 			godot_variant ret;
 			api->godot_variant_new_nil(&ret);
 			return ret;
@@ -91,12 +86,13 @@ namespace vaeg {
 			godot_pool_byte_array_read_access* read_access = api->godot_pool_byte_array_read(&pool);
 			const uint8_t* data = api->godot_pool_byte_array_read_access_ptr(read_access);
 
-			tklb::Handle h = Engine::instance().createClip();
-			auto clip = Engine::instance().getClip(h);
-			clip->data.resize(length, channels);
-			clip->data.setFromInterleaved(reinterpret_cast<const short*>(data), length, channels);
-			clip->data.multiply(1.0 / 32768.0);
-			emitter->clip = h;
+			vae::core::AudioBuffer buf;
+			auto clip = Engine::instance().createClip();
+			buf.resize(length, channels);
+			buf.setFromInterleaved(reinterpret_cast<const short*>(data), length, channels);
+			buf.multiply(1.0 / 32768.0);
+			clip.load(buf);
+			emitter.setClip(clip);
 
 			api->godot_pool_byte_array_read_access_destroy(read_access);
 			api->godot_pool_byte_array_destroy(&pool);
@@ -114,7 +110,7 @@ namespace vaeg {
 		}
 
 		~Emitter() {
-			Engine::instance().destroyEmitter(handle);
+			emitter.destroy();
 			api->godot_variant_destroy(&sample);
 		}
 	};
