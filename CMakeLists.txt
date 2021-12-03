@@ -26,23 +26,25 @@ endif()
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# set(CMAKE_POSITION_INDEPENDENT_CODE ON) # -fPIC needed for clang to link
+set(CMAKE_POSITION_INDEPENDENT_CODE ON) # -fPIC needed for clang to link
 
 file(GLOB SRC_CORE "src/*.cpp")
 
-# we want everything to be linked into a single file
-# TODO doesn't build with off for some reason
-
-set(VAE_BUILD_STATIC_LIBS ON)
-# set(VAE_PROFILER ON)
 add_subdirectory(VAE)
+add_subdirectory(godot-cpp)
 
 add_library(vaeg SHARED ${SRC_CORE})
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/src
-	${CMAKE_CURRENT_SOURCE_DIR}/godot_headers
+	${CMAKE_CURRENT_SOURCE_DIR}/godot-cpp/include
+	${CMAKE_CURRENT_SOURCE_DIR}/godot-cpp/include/gen
+	${CMAKE_CURRENT_SOURCE_DIR}/godot-cpp/include/core
+	godot-cpp
 	vae
 )
 
-target_link_libraries(vaeg vae)
+target_link_libraries(vaeg
+	vae
+	godot-cpp
+)
