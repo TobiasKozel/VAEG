@@ -16,9 +16,16 @@ func _enter_tree():
 	editor.inspect_object(tree)
 
 	add_custom_type(
-		"Emitter",
+		"VAEEmitter",
 		"Spatial",
 		preload("res://addons/vaeg/bin/classes/emitter.gdns"),
+		preload("res://addons/vaeg/bin/classes/emitter.svg")
+	)
+
+	add_custom_type(
+		"VAEListener",
+		"Spatial",
+		preload("res://addons/vaeg/bin/classes/listener.gdns"),
 		preload("res://addons/vaeg/bin/classes/emitter.svg")
 	)
 

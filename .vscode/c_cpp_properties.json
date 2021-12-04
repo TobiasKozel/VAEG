@@ -2,7 +2,11 @@
     "env": {
         "includes": [
             "${workspaceFolder}/src",
-            "${workspaceFolder}/godot_headers"
+            "${workspaceFolder}/godot-cpp/godot-headers",
+            "${workspaceFolder}/godot-cpp/include",
+            "${workspaceFolder}/godot-cpp/include/core",
+            "${workspaceFolder}/build/godot-cpp/include",
+            "${workspaceFolder}/build/godot-cpp/include/gen"
         ]
     },
     "configurations": [

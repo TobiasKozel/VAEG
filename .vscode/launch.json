@@ -49,8 +49,8 @@
 			"name": "(Windows) editor debug",
 			"type": "cppvsdbg",
 			"request": "launch",
-			"program": "C:/dev/tools/Godot.exe",
-			// "program": "C:/dev/git/master/godot/bin/godot.windows.tools.64.exe",
+			// "program": "C:/dev/tools/Godot.exe",
+			"program": "C:/dev/git/master/godot/bin/godot.windows.tools.64.exe",
 			"args": [
 				"${workspaceFolder}/demo/project.godot",
 				"--verbose"

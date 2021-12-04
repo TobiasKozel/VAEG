@@ -8,6 +8,7 @@ project(
 )
 
 if(MSVC)
+	# SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /showIncludes")
 	set(VAEG_WIN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/demo/addons/vaeg/bin/win64/)
 	# Don't put the dll in subfolders based on build config
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${VAEG_WIN_PATH})
@@ -31,6 +32,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON) # -fPIC needed for clang to link
 file(GLOB SRC_CORE "src/*.cpp")
 
 add_subdirectory(VAE)
+set(CMAKE_BUILD_TYPE Debug)
 add_subdirectory(godot-cpp)
 
 add_library(vaeg SHARED ${SRC_CORE})
@@ -38,9 +40,9 @@ add_library(vaeg SHARED ${SRC_CORE})
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}/godot-cpp/include
-	${CMAKE_CURRENT_SOURCE_DIR}/godot-cpp/include/gen
 	${CMAKE_CURRENT_SOURCE_DIR}/godot-cpp/include/core
-	godot-cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/build/godot-cpp/include/gen # the genrated source files are in the cmake build folder
+	${CMAKE_CURRENT_SOURCE_DIR}/build/godot-cpp/include/
 	vae
 )
 

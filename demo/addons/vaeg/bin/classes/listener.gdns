@@ -3,6 +3,6 @@
 [ext_resource path="res://addons/vaeg/bin/vaeg.gdnlib" type="GDNativeLibrary" id=1]
 
 [resource]
-resource_name = "VAEEmitterResource"
-class_name = "VAEEmitter"
+resource_name = "VAEListenerResource"
+class_name = "VAEListener"
 library = ExtResource( 1 )
