@@ -6,7 +6,7 @@
 #include <Godot.hpp>
 #include <Spatial.hpp>
 
-namespace vaeg {
+namespace godot {
 
 	class VAEEmitter : public godot::Spatial {
 		GODOT_CLASS(VAEEmitter, godot::Spatial)
@@ -19,11 +19,11 @@ namespace vaeg {
 		}
 
 		VAEEmitter() {
-			mEmitter = vaeg::e().createEmitter();
+			mEmitter = vae().createEmitter();
 		}
 
 		~VAEEmitter() {
-			vaeg::e().removeEmitter(mEmitter);
+			vae().removeEmitter(mEmitter);
 		}
 
 		void _init() {
@@ -33,8 +33,9 @@ namespace vaeg {
 		}
 
 		void _process(float delta) {
-			auto pos = get_translation();
-			vaeg::e().setEmitter(mEmitter, {
+			const auto global = get_global_transform();
+			const auto pos = global.get_origin();
+			vae().setEmitter(mEmitter, {
 				pos.x,
 				pos.y,
 				pos.z,
@@ -42,11 +43,11 @@ namespace vaeg {
 		}
 
 		void play() {
-			vaeg::e().fireEvent(0, 0, mEmitter);
+			vae().fireEvent(0, 0, mEmitter);
 		}
 
 		void stop() {
-			vaeg::e().stopEmitter(mEmitter);
+			vae().stopEmitter(mEmitter);
 		}
 
 	};

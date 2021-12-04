@@ -8,22 +8,6 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "",
-"class": "VAEEmitterScript",
-"language": "NativeScript",
-"path": "res://addons/vaeg/bin/classes/emitter.gdns"
-}, {
-"base": "Spatial",
-"class": "VAEListenerScript",
-"language": "NativeScript",
-"path": "res://addons/vaeg/bin/classes/listener.gdns"
-} ]
-_global_script_class_icons={
-"VAEEmitterScript": "res://addons/vaeg/bin/classes/emitter.svg",
-"VAEListenerScript": "res://addons/vaeg/bin/classes/emitter.svg"
-}
-
 [application]
 
 config/name="demo-project"
