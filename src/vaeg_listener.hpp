@@ -15,11 +15,10 @@ namespace godot {
 		}
 
 		void _init() {
-		}
-
-		VAEListener() {
 			mListener = vae().createListener();
 		}
+
+		VAEListener() { }
 
 		~VAEListener() {
 			vae().removeListener(mListener);
@@ -28,16 +27,19 @@ namespace godot {
 		void _process(float delta) {
 			const auto global = get_global_transform();
 			const auto pos = global.get_origin();
-			vae().setEmitter(mListener, {
-				pos.x,
-				pos.y,
-				pos.z,
-			}, { });
-			vae().setListener(mListener, { {
-				pos.x,
-				pos.y,
-				pos.z,
-			}, { }, { } });
+			const auto& front = global.basis.z;
+			const auto& up = global.basis.y;
+			vae().setListener(mListener, {
+				{
+					pos.x, pos.y, pos.z,
+				},
+				{
+					front[0], front[1], front[2]
+				},
+				{
+					up[0], up[1], up[2]
+				}
+			});
 		}
 
 	};

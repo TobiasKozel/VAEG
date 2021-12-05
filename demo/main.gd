@@ -1,3 +1,4 @@
+# tool
 extends Node
 
 var time: float = 0.0
@@ -14,5 +15,6 @@ func _input(event):
 
 func _process(delta):
 	time += delta
-	#$Emitter.translation.x = sin(time * 3) * 4
-	#$Emitter2.translation.x = sin(time * 6) * 4
+	var rad = (sin(time * 0.6) + 1.0) * 6 + 0.1
+	$VAEEmitter.translation.x = sin(time * 2) * rad
+	$VAEEmitter.translation.z = cos(time * 2) * rad

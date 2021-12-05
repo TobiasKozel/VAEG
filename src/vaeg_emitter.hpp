@@ -18,15 +18,14 @@ namespace godot {
 			// register_property<Emitter, bool>("autoplay", &Emitter::mAutoPlay, false);
 		}
 
-		VAEEmitter() {
-			mEmitter = vae().createEmitter();
-		}
+		VAEEmitter() { }
 
 		~VAEEmitter() {
 			vae().removeEmitter(mEmitter);
 		}
 
 		void _init() {
+			mEmitter = vae().createEmitter();
 			if (mAutoPlay) {
 				play();
 			}

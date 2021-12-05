@@ -32,8 +32,8 @@
 				"${workspaceFolder}/demo/main.tscn",
 				"--path",
 				"${workspaceFolder}/demo",
-				"--remote-debug",
-				"127.0.0.1:6007",
+				// "--remote-debug",
+				// "127.0.0.1:6007",
 				"--verbose"
 			],
 			"symbolOptions": {

@@ -12,6 +12,7 @@ script = ExtResource( 3 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.98996 )
 
 [node name="VAEListener" type="Spatial" parent="."]
+transform = Transform( -0.999469, 0, -0.0325969, 0, 1, 0, 0.0325969, 0, -0.999469, 0, 0, 0 )
 script = ExtResource( 1 )
 
 [node name="Sprite3D2" type="Sprite3D" parent="VAEListener"]
@@ -22,7 +23,7 @@ __meta__ = {
 }
 
 [node name="VAEEmitter" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.49488, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1014, 0, -14.1717 )
 script = ExtResource( 4 )
 
 [node name="Sprite3D3" type="Sprite3D" parent="VAEEmitter"]
