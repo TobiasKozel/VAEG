@@ -32,7 +32,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON) # -fPIC needed for clang to link
 file(GLOB SRC_CORE "src/*.cpp")
 
 add_subdirectory(VAE)
-set(CMAKE_BUILD_TYPE Debug)
+
+message("VAEG building with build type ${CMAKE_BUILD_TYPE}")
+
 add_subdirectory(godot-cpp)
 
 add_library(vaeg SHARED ${SRC_CORE})

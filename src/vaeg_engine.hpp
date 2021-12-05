@@ -4,21 +4,35 @@
 #include "../VAE/src/core/vae_engine.hpp"
 #undef CONNECT_DEFERRED // lovely windows.h easter egg, used as an enum in Object.hpp
 
+#include <OS.hpp>
+
 namespace godot {
-	static vae::core::Engine engine({
-		"C:\\dev\\git\\master\\VAEG\\VAE\\dev/"
-	});
+	vae::core::Engine* engine = nullptr;
+	std::string rootPath;
 	bool vaeRunning = false;
 
 	vae::core::Engine& vae() {
-		return engine;
+		return *engine;
 	}
 
 	void start() {
 		if (!vaeRunning) {
+			auto exec = OS::get_singleton()->get_executable_path();
+			rootPath = exec.utf8().get_data();
+			// const char* path = rootPath.c_str();
+			const char* path = "C:\dev\git\master\VAEG\demo\banks/";
+			engine = new vae::core::Engine({ path });
 			vae().loadBank("bank1");
 			vae().start();
 			vaeRunning = true;
+		}
+	}
+
+	void stop() {
+		if (vaeRunning) {
+			delete engine;
+			engine = nullptr;
+			vaeRunning = false;
 		}
 	}
 }
