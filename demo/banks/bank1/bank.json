@@ -4,7 +4,7 @@
 	"sources": [
 		{
 			"id": 0,
-			"name": "Sound1",
+			"name": "Sine",
 			"path": "sound1.wav",
 			"format": "wav",
 			"type": "preload",
@@ -12,8 +12,48 @@
 		},
 		{
 			"id": 1,
-			"name": "Sound2",
-			"path": "punch2.wav",
+			"name": "Jump1",
+			"path": "jump_1.wav",
+			"format": "wav",
+			"type": "preload",
+			"gain": 1.0
+		},
+		{
+			"id": 2,
+			"name": "Jump2",
+			"path": "jump_2.wav",
+			"format": "wav",
+			"type": "preload",
+			"gain": 1.0
+		},
+		{
+			"id": 3,
+			"name": "Jump3",
+			"path": "jump_3.wav",
+			"format": "wav",
+			"type": "preload",
+			"gain": 1.0
+		},
+		{
+			"id": 4,
+			"name": "WalkConrete1",
+			"path": "concrete_1.wav",
+			"format": "wav",
+			"type": "preload",
+			"gain": 1.0
+		},
+		{
+			"id": 5,
+			"name": "WalkConrete2",
+			"path": "concrete_2.wav",
+			"format": "wav",
+			"type": "preload",
+			"gain": 1.0
+		},
+		{
+			"id": 6,
+			"name": "WalkConrete3",
+			"path": "concrete_3.wav",
 			"format": "wav",
 			"type": "preload",
 			"gain": 1.0
@@ -29,7 +69,7 @@
 		},
 		{
 			"id": 1,
-			"name": "Mixer1",
+			"name": "Character",
 			"gain": 1.0,
 			"effects": [],
 			"parent": 0
@@ -39,69 +79,47 @@
 	"events": [
 		{
 			"id": 0,
-			"name": "Event1",
-			"type": "start",
-			"source": 0,
-			"on_start": [2],
-			"on_end": [1, 4],
+			"name": "JumpRand",
+			"type": "start_rand",
+			"source": null,
+			"on_start": [1, 2, 3],
+			"on_end": [],
 			"mixer": 1,
-			"hrtf": true,
-			"force_mixer": false
-		},
-		{
-			"id": 1,
-			"name": "Event2",
-			"type": "emit",
-			"source": null,
-			"on_start": [],
-			"on_end": [],
-			"mixer": 0,
-			"hrtf": true,
-			"force_mixer": false
-		},
-		{
-			"id": 2,
-			"name": "Start Event3",
-			"type": "emit",
-			"source": null,
-			"on_start": [],
-			"on_end": [],
-			"mixer": 0,
-			"hrtf": true,
-			"force_mixer": false
-		},
-		{
-			"id": 3,
-			"name": "End Event4",
-			"type": "stop",
-			"source": null,
-			"on_start": [0],
-			"on_end": [],
-			"mixer": 0,
-			"hrtf": true,
-			"force_mixer": false
-		},
-		{
-			"id": 4,
-			"name": "Event5",
-			"type": "start",
-			"source": 0,
-			"on_start": [2],
-			"on_end": [1, 4],
-			"mixer": 0,
-			"hrtf": true,
+			"hrtf": false,
 			"force_mixer": true
 		},
 		{
-			"id": 5,
-			"name": "Jump",
+			"id": 1,
+			"name": "Jump1",
 			"type": "start",
 			"source": 1,
 			"on_start": [],
 			"on_end": [],
-			"mixer": 0,
-			"hrtf": true,
-			"force_mixer": false
+			"mixer": 1,
+			"hrtf": false,
+			"force_mixer": true
+		},
+		{
+			"id": 2,
+			"name": "Jump2",
+			"type": "start",
+			"source": 2,
+			"on_start": [],
+			"on_end": [],
+			"mixer": 1,
+			"hrtf": false,
+			"force_mixer": true
+		},
+		{
+			"id": 3,
+			"name": "Jump3",
+			"type": "start",
+			"source": 3,
+			"on_start": [],
+			"on_end": [],
+			"mixer": 1,
+			"hrtf": false,
+			"force_mixer": true
 		}
 	]
 }
