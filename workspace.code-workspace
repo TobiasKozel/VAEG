@@ -94,7 +94,8 @@
 			"xhash": "cpp",
 			"xstring": "cpp",
 			"xlocbuf": "cpp",
-			"*.inc": "cpp"
+			"*.inc": "cpp",
+			"xiosbase": "cpp"
 		}
 	}
 }

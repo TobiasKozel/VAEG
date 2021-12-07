@@ -20,7 +20,7 @@ namespace godot {
 			auto exec = OS::get_singleton()->get_executable_path();
 			rootPath = exec.utf8().get_data();
 			// const char* path = rootPath.c_str();
-			const char* path = "C:\dev\git\master\VAEG\demo\banks/";
+			const char* path = "C:/dev/git/master/VAEG/demo/banks/";
 			engine = new vae::core::Engine({ path });
 			vae().loadBank("bank1");
 			vae().start();

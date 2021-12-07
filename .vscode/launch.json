@@ -5,12 +5,19 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Python: Current File",
+			"type": "python",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "(Windows) scene release",
 			"type": "cppvsdbg",
 			"request": "launch",
 			"program": "C:/dev/tools/Godot.exe",
 			"args": [
-				"${workspaceFolder}/demo/main.tscn",
+				"${workspaceFolder}/demo/Levels/Main/L_Main.tscn",
 				"--path",
 				"${workspaceFolder}/demo",
 			],
@@ -29,7 +36,7 @@
 			"request": "launch",
 			"program": "C:/dev/git/master/godot/bin/godot.windows.tools.64.exe",
 			"args": [
-				"${workspaceFolder}/demo/main.tscn",
+				"${workspaceFolder}/demo/Levels/Main/L_Main.tscn",
 				"--path",
 				"${workspaceFolder}/demo",
 				// "--remote-debug",

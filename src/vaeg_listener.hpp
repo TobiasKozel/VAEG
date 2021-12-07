@@ -34,7 +34,8 @@ namespace godot {
 					pos.x, pos.y, pos.z,
 				},
 				{
-					front[0], front[1], front[2]
+					// for some reason the are all negative
+					-front[0], -front[1], -front[2]
 				},
 				{
 					up[0], up[1], up[2]
