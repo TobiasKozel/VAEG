@@ -18,6 +18,8 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("move_jump"):
+		$ArenaGeometry/VAEEmitter.play()
 	if event.is_action_pressed("ui_cancel") and fast_close:
 		get_tree().quit() # Quits the game
 	

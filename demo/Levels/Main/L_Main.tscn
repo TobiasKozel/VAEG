@@ -99,8 +99,12 @@ transform = Transform( -3.5, -0.216506, -3.01992e-07, -6.06218, 0.125, -1.51421e
 transform = Transform( 3.5, 0.216506, 0, -6.06218, 0.125, 0, 0, 0, 2, -16.5, 5.5, 8.5 )
 
 [node name="VAEEmitter" type="Spatial" parent="ArenaGeometry"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.335793, 1.19622, -3.57185 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0373, 1.19622, -3.57185 )
 script = ExtResource( 7 )
+auto_emitter = true
+bank = 0
+event = 5
+max_distance = 5.0
 
 [node name="MeshInstance" type="MeshInstance" parent="ArenaGeometry/VAEEmitter"]
 mesh = SubResource( 1 )

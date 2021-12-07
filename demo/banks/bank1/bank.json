@@ -9,6 +9,14 @@
 			"format": "wav",
 			"type": "preload",
 			"gain": 1.0
+		},
+		{
+			"id": 1,
+			"name": "Sound2",
+			"path": "punch2.wav",
+			"format": "wav",
+			"type": "preload",
+			"gain": 1.0
 		}
 	],
 	"mixers": [
@@ -83,6 +91,17 @@
 			"mixer": 0,
 			"hrtf": true,
 			"force_mixer": true
+		},
+		{
+			"id": 5,
+			"name": "Jump",
+			"type": "start",
+			"source": 1,
+			"on_start": [],
+			"on_end": [],
+			"mixer": 0,
+			"hrtf": true,
+			"force_mixer": false
 		}
 	]
 }
