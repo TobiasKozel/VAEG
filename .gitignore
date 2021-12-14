@@ -17,3 +17,4 @@ build
 /demo/addons/vaeg/bin/x11/*
 /demo/addons/vaeg/bin/osx/*
 /demo/addons/vaeg/bin/win64/*
+.cache

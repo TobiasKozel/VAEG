@@ -2,7 +2,24 @@
 #define _VAEG_ENGINE
 
 #include "../VAE/src/core/vae_engine.hpp"
-#undef CONNECT_DEFERRED // lovely windows.h easter egg, used as an enum in Object.hpp
+
+/**
+ * Windows badly defines a lot of stuff we'll never use. Undefine it.
+ * This if from godots core/typedefs.h
+ */
+#ifdef _WIN32
+	#undef min // override standard definition
+	#undef max // override standard definition
+	#undef ERROR // override (really stupid) wingdi.h standard definition
+	#undef DELETE // override (another really stupid) winnt.h standard definition
+	#undef MessageBox // override winuser.h standard definition
+	#undef MIN // override standard definition
+	#undef MAX // override standard definition
+	#undef CLAMP // override standard definition
+	#undef Error
+	#undef OK
+	#undef CONNECT_DEFERRED // override from Windows SDK, clashes with Object enum
+#endif
 
 #include <OS.hpp>
 
