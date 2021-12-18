@@ -4,8 +4,8 @@
 #include "../VAE/src/core/vae_engine.hpp"
 
 /**
+ * This is from godots core/typedefs.h:
  * Windows badly defines a lot of stuff we'll never use. Undefine it.
- * This if from godots core/typedefs.h
  */
 #ifdef _WIN32
 	#undef min // override standard definition
@@ -37,9 +37,11 @@ namespace godot {
 			auto exec = OS::get_singleton()->get_executable_path();
 			rootPath = exec.utf8().get_data();
 			// const char* path = rootPath.c_str();
-			const char* path = "C:/dev/git/master/VAEG/demo/banks/";
-			engine = new vae::core::Engine({ path });
+			// const char* path = "C:/dev/git/master/VAEG/demo/banks/";
+			const char* path = "/home/usr/git/master/VAEG/demo/banks/";
+			engine = new vae::core::Engine({ path, 44100 });
 			vae().loadBank("bank1");
+			vae().loadHRTF("hrtf.msgpack");
 			vae().start();
 			vaeRunning = true;
 		}

@@ -7,7 +7,7 @@
 			"name": "Sine",
 			"path": "sound1.wav",
 			"format": "wav",
-			"type": "preload",
+			"stream": false,
 			"gain": 1.0
 		},
 		{
@@ -15,7 +15,7 @@
 			"name": "Jump1",
 			"path": "jump_1.wav",
 			"format": "wav",
-			"type": "preload",
+			"stream": false,
 			"gain": 1.0
 		},
 		{
@@ -23,7 +23,7 @@
 			"name": "Jump2",
 			"path": "jump_2.wav",
 			"format": "wav",
-			"type": "preload",
+			"stream": false,
 			"gain": 1.0
 		},
 		{
@@ -31,7 +31,7 @@
 			"name": "Jump3",
 			"path": "jump_3.wav",
 			"format": "wav",
-			"type": "preload",
+			"stream": false,
 			"gain": 1.0
 		},
 		{
@@ -39,7 +39,7 @@
 			"name": "WalkConrete1",
 			"path": "concrete_1.wav",
 			"format": "wav",
-			"type": "preload",
+			"stream": false,
 			"gain": 1.0
 		},
 		{
@@ -47,7 +47,7 @@
 			"name": "WalkConrete2",
 			"path": "concrete_2.wav",
 			"format": "wav",
-			"type": "preload",
+			"stream": false,
 			"gain": 1.0
 		},
 		{
@@ -55,7 +55,7 @@
 			"name": "WalkConrete3",
 			"path": "concrete_3.wav",
 			"format": "wav",
-			"type": "preload",
+			"stream": false,
 			"gain": 1.0
 		}
 	],
@@ -96,7 +96,7 @@
 			"on_start": [],
 			"on_end": [],
 			"mixer": 1,
-			"hrtf": false,
+			"hrtf": true,
 			"force_mixer": true
 		},
 		{
@@ -107,7 +107,7 @@
 			"on_start": [],
 			"on_end": [],
 			"mixer": 1,
-			"hrtf": false,
+			"hrtf": true,
 			"force_mixer": true
 		},
 		{
@@ -118,7 +118,7 @@
 			"on_start": [],
 			"on_end": [],
 			"mixer": 1,
-			"hrtf": false,
+			"hrtf": true,
 			"force_mixer": true
 		}
 	]
