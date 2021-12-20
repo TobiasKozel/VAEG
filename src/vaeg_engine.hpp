@@ -2,6 +2,9 @@
 #define _VAEG_ENGINE
 
 #include "../VAE/src/core/vae_engine.hpp"
+#include "String.hpp"
+#include <cmath>
+#include <gdnative/gdnative.h>
 
 /**
  * This is from godots core/typedefs.h:
@@ -22,38 +25,71 @@
 #endif
 
 #include <OS.hpp>
+#include <Godot.hpp>
+#include <Node.hpp>
+
 
 namespace godot {
-	vae::core::Engine* engine = nullptr;
-	std::string rootPath;
-	bool vaeRunning = false;
 
+	vae::core::Engine* engine;
 	vae::core::Engine& vae() {
 		return *engine;
 	}
 
-	void start() {
-		if (!vaeRunning) {
-			auto exec = OS::get_singleton()->get_executable_path();
-			rootPath = exec.utf8().get_data();
-			// const char* path = rootPath.c_str();
-			// const char* path = "C:/dev/git/master/VAEG/demo/banks/";
-			const char* path = "/home/usr/git/master/VAEG/demo/banks/";
-			engine = new vae::core::Engine({ path, 44100 });
-			vae().loadBank("bank1");
-			vae().loadHRTF("hrtf.msgpack");
-			vae().start();
-			vaeRunning = true;
+	class VAEEngine : public Node {
+		GODOT_CLASS(VAEEngine, Node)
+	public:
+		static void _register_methods() {
+			register_signal<VAEEngine>("vae_started");
+			register_signal<VAEEngine>("vae_stopped");
+			register_method("_process", &VAEEngine::_process);
+			register_method("_ready", &VAEEngine::_ready);
+			register_method("start", &VAEEngine::start);
+			register_method("stop", &VAEEngine::stop);
+			register_method("load_bank", &VAEEngine::loadBank);
+			register_method("load_hrtf", &VAEEngine::loadHRTF);
 		}
-	}
 
-	void stop() {
-		if (vaeRunning) {
-			delete engine;
-			engine = nullptr;
-			vaeRunning = false;
+		VAEEngine() { }
+
+		~VAEEngine() { }
+
+		void _init() { }
+
+		void _ready() { }
+
+		bool start() {
+			if (vae().start() == vae::Result::Success) {
+				emit_signal("vae_started");
+				return true;
+			}
+			return false;
 		}
-	}
+
+		bool stop() {
+			if (vae().stop() == vae::Result::Success) {
+				emit_signal("vae_stopped");
+				return true;
+			}
+			return false;
+		}
+
+		bool loadBank(String path) {
+			return vae().loadBank(path.utf8().get_data()) == vae::Result::Success;
+		}
+
+		bool loadHRTF(String path) {
+			return vae().loadHRTF(path.utf8().get_data()) == vae::Result::Success;
+		}
+
+		void _process(float delta) {
+			// vae().update();
+		}
+	};
 }
+
+
+
+
 
 #endif // _VAEG_ENGINE

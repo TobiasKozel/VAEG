@@ -99,15 +99,15 @@ transform = Transform( -3.5, -0.216506, -3.01992e-07, -6.06218, 0.125, -1.51421e
 transform = Transform( 3.5, 0.216506, 0, -6.06218, 0.125, 0, 0, 0, 2, -16.5, 5.5, 8.5 )
 
 [node name="VAEEmitter" type="Spatial" parent="ArenaGeometry"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0373, 1.19622, -3.57185 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.04542, 1.25622, -3.57185 )
 script = ExtResource( 7 )
-auto_emitter = false
 bank = 0
 event = 0
 max_distance = 5.0
 
 [node name="MeshInstance" type="MeshInstance" parent="ArenaGeometry/VAEEmitter"]
 mesh = SubResource( 1 )
+material/0 = null
 
 [node name="Lighting" type="Node" parent="."]
 
@@ -119,3 +119,9 @@ transform = Transform( -0.866026, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75,
 shadow_enabled = true
 shadow_bias = 0.05
 directional_shadow_max_distance = 250.0
+
+[node name="Ambient" type="Spatial" parent="."]
+script = ExtResource( 7 )
+spatial = false
+bank = 0
+event = 4

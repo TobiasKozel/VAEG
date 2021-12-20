@@ -1,14 +1,16 @@
 extends Spatial
 
-#-----------------SCENE--SCRIPT------------------#
-#    Close your game faster by clicking 'Esc'    #
-#   Change mouse mode by clicking 'Shift + F1'   #
-#------------------------------------------------#
-
 export var fast_close := true
 
+func engine_started():
+	$Ambient.play()
 
 func _ready() -> void:
+	EngineInstance.connect("vae_started", self, "engine_started")
+	EngineInstance.load_hrtf("hrtf.msgpack")
+	EngineInstance.load_bank("bank1")
+	EngineInstance.start()
+	
 	if !OS.is_debug_build():
 		fast_close = false
 	

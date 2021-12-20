@@ -16,6 +16,8 @@ namespace godot {
 		float mMaxDistance = 50;
 		float mSpread = 0.5;
 		bool mAutoEmitter = false;
+		bool mIsSpatial = true;
+		bool mHRTF = false;
 
 		void getTransform(vae::LocationDirection& t) {
 			const auto global = get_global_transform();
@@ -32,6 +34,8 @@ namespace godot {
 			register_method("_process", &VAEEmitter::_process);
 			register_method("_ready", &VAEEmitter::_ready);
 			register_property<VAEEmitter, bool>("auto_emitter", &VAEEmitter::mAutoEmitter, false);
+			register_property<VAEEmitter, bool>("spatial", &VAEEmitter::mIsSpatial, true);
+			register_property<VAEEmitter, bool>("hrtf", &VAEEmitter::mHRTF, false);
 			register_property<VAEEmitter, int>("bank", &VAEEmitter::mBank, vae::InvalidBankHandle);
 			register_property<VAEEmitter, int>("event", &VAEEmitter::mEvent, vae::InvalidEventHandle);
 			register_property<VAEEmitter, float>("max_distance", &VAEEmitter::mMaxDistance, 50);
