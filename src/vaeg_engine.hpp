@@ -51,7 +51,9 @@ namespace godot {
 		}
 
 		VAEEngine() {
-			const char* path = "/home/usr/git/master/VAEG/demo/banks/";
+			// We use the bank from the submodule
+			// TODO This should be relative to the godot executable
+			const char* path = "/home/usr/git/master/VAEG/VAE/dev/";
 			vae::EngineConfig config  = { path, 44100 };
 			// config.processInBufferSwitch = false;
 			// config.hrtfVoices = 1;
