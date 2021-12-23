@@ -50,7 +50,14 @@ namespace godot {
 			register_method("load_hrtf", &VAEEngine::loadHRTF);
 		}
 
-		VAEEngine() { }
+		VAEEngine() {
+			const char* path = "/home/usr/git/master/VAEG/demo/banks/";
+			vae::EngineConfig config  = { path, 44100 };
+			// config.processInBufferSwitch = false;
+			// config.hrtfVoices = 1;
+			// config.voices = 2;
+			vae().init(config);
+		}
 
 		~VAEEngine() { }
 

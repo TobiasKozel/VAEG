@@ -1,3 +1,4 @@
+#include "vae/vae.hpp"
 #define VAE_LOG_EVENTS
 #define VAE_LOG_VOICES
 #include "./vaeg_engine.hpp"
@@ -6,8 +7,7 @@
 
 
 extern "C" void GDN_EXPORT godot_gdnative_init(godot_gdnative_init_options *o) {
-	const char* path = "/home/usr/git/master/VAEG/demo/banks/";
-	godot::engine = new vae::core::Engine({ path, 44100 });
+	godot::engine = new vae::core::Engine();
 	godot::Godot::gdnative_init(o);
 }
 

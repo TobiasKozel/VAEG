@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.9.4)
 
 project(
 	vaeg
@@ -52,3 +52,14 @@ target_link_libraries(vaeg
 	vae
 	godot-cpp
 )
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
+
+if(lto_supported)
+	message(STATUS "IPO / LTO enabled")
+	set_property(TARGET vaeg PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+	message(STATUS "IPO / LTO not supported: <${lto_error}>")
+	# set_property(TARGET vaeg APPEND_STRING PROPERTY COMPILE_FLAGS "-flto -s")
+endif()
