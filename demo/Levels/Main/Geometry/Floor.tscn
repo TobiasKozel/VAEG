@@ -11,7 +11,6 @@ extents = Vector3( 20, 0.25, 20 )
 
 [node name="Floor" type="MeshInstance"]
 mesh = SubResource( 1 )
-material/0 = null
 
 [node name="StaticBody" type="StaticBody" parent="."]
 

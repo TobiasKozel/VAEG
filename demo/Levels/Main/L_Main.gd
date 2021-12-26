@@ -3,7 +3,10 @@ extends Spatial
 export var fast_close := true
 
 func engine_started():
-	$Ambient.play()
+	pass
+
+func _exit_tree() -> void:
+	EngineInstance.stop()
 
 func _ready() -> void:
 	EngineInstance.connect("vae_started", self, "engine_started")
@@ -18,10 +21,7 @@ func _ready() -> void:
 		print("** Fast Close enabled in the 'L_Main.gd' script **")
 		print("** 'Esc' to close 'Shift + F1' to release mouse **")
 
-
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("move_jump"):
-		$ArenaGeometry/VAEEmitter.play()
 	if event.is_action_pressed("ui_cancel") and fast_close:
 		get_tree().quit() # Quits the game
 

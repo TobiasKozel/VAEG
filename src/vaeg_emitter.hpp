@@ -15,9 +15,10 @@ namespace godot {
 		int mEvent = vae::InvalidEventHandle;
 		float mMaxDistance = 50;
 		float mSpread = 0.5;
+		float mSpeed = 1.0;
+		float mLowpass = 0.0;
+		float mHighpass = 0.0;
 		bool mAutoEmitter = false;
-		bool mIsSpatial = true;
-		bool mHRTF = false;
 
 		void getTransform(vae::LocationDirection& t) {
 			const auto global = get_global_transform();
@@ -34,12 +35,13 @@ namespace godot {
 			register_method("_process", &VAEEmitter::_process);
 			register_method("_ready", &VAEEmitter::_ready);
 			register_property<VAEEmitter, bool>("auto_emitter", &VAEEmitter::mAutoEmitter, false);
-			register_property<VAEEmitter, bool>("spatial", &VAEEmitter::mIsSpatial, true);
-			register_property<VAEEmitter, bool>("hrtf", &VAEEmitter::mHRTF, false);
 			register_property<VAEEmitter, int>("bank", &VAEEmitter::mBank, vae::InvalidBankHandle);
 			register_property<VAEEmitter, int>("event", &VAEEmitter::mEvent, vae::InvalidEventHandle);
 			register_property<VAEEmitter, float>("max_distance", &VAEEmitter::mMaxDistance, 50);
 			register_property<VAEEmitter, float>("spread", &VAEEmitter::mSpread, 0.5);
+			register_property<VAEEmitter, float>("lowpass", &VAEEmitter::mLowpass, 0.0);
+			register_property<VAEEmitter, float>("highpass", &VAEEmitter::mHighpass, 0.0);
+			register_property<VAEEmitter, float>("speed", &VAEEmitter::mSpeed, 1.0);
 			register_method("play", &VAEEmitter::play);
 			register_method("stop", &VAEEmitter::stop);
 		}
@@ -70,6 +72,9 @@ namespace godot {
 			vae::LocationDirection t;
 			getTransform(t);
 			vae().setEmitter(mEmitter, t, mSpread);
+			vae().setSpeed(mEmitter, mSpeed);
+			vae().setLowpass(mEmitter, mLowpass);
+			vae().setHighpass(mEmitter, mHighpass);
 		}
 
 		void play() {

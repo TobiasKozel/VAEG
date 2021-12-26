@@ -26,9 +26,11 @@ export(int) var acceleration = 8
 export(int) var deacceleration = 10
 export(float, 0.0, 1.0, 0.05) var air_control = 0.3
 export(int) var jump_height = 10
+export(float) var walk_sound_pause = 200
 var _speed: int
 var _is_sprinting_input := false
 var _is_jumping_input := false
+var _walk_time = 0
 
 ##################################################
 
@@ -66,6 +68,7 @@ func walk(delta: float) -> void:
 	direction_input()
 	
 	if is_on_floor():
+			
 		snap = -get_floor_normal() - get_floor_velocity() * delta
 		
 		# Workaround for sliding down after jump on slope
@@ -139,6 +142,12 @@ func accelerate(delta: float) -> void:
 	
 	if not is_on_floor():
 		_temp_accel *= air_control
+	else:
+		_walk_time += _temp_vel.length()
+		if (walk_sound_pause < _walk_time):
+			_walk_time = 0
+			$step.play()
+			$step.speed = rand_range(0.8, 1.2)
 	
 	# Interpolation
 	_temp_vel = _temp_vel.linear_interpolate(_target, _temp_accel * delta)
@@ -157,6 +166,8 @@ func accelerate(delta: float) -> void:
 
 func jump() -> void:
 	if _is_jumping_input:
+		$jump.play()
+		$jump.speed = rand_range(0.9, 1.1)
 		velocity.y = jump_height
 		snap = Vector3.ZERO
 
