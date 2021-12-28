@@ -34,6 +34,7 @@ namespace godot {
 		static void _register_methods() {
 			register_method("_process", &VAEEmitter::_process);
 			register_method("_ready", &VAEEmitter::_ready);
+			register_method("_engine_ready", &VAEEmitter::_engine_ready);
 			register_property<VAEEmitter, bool>("auto_emitter", &VAEEmitter::mAutoEmitter, false);
 			register_property<VAEEmitter, int>("bank", &VAEEmitter::mBank, vae::InvalidBankHandle);
 			register_property<VAEEmitter, int>("event", &VAEEmitter::mEvent, vae::InvalidEventHandle);
@@ -52,13 +53,7 @@ namespace godot {
 			vae().removeEmitter(mEmitter);
 		}
 
-		void _init() {
-			// needed for godot cpp
-			// https://github.com/godotengine/godot-cpp/issues/348
-			// but too early for class members to be initialized
-		}
-
-		void _ready() {
+		void _engine_ready() {
 			if (mAutoEmitter) {
 				vae::LocationDirection t;
 				getTransform(t);
@@ -66,6 +61,18 @@ namespace godot {
 			} else {
 				mEmitter = vae().createEmitter();
 			}
+		}
+
+		void _init() {
+			// needed for godot cpp
+			// https://github.com/godotengine/godot-cpp/issues/348
+			// but too early for class members to be initialized
+		}
+
+		void _ready() {
+			auto node = get_node("/root/EngineInstance");
+			if (node == nullptr) { return; }
+			node->connect("vae_started", this, "_engine_ready");
 		}
 
 		void _process(float delta) {

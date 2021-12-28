@@ -48,13 +48,14 @@ namespace godot {
 			register_method("stop", &VAEEngine::stop);
 			register_method("load_bank", &VAEEngine::loadBank);
 			register_method("load_hrtf", &VAEEngine::loadHRTF);
+			register_method("set_mixer_effect", &VAEEngine::setMixerEffectParameter);
 		}
 
 		VAEEngine() {
 			// We use the bank from the submodule
 			// TODO This should be relative to the godot executable
-			// const char* path = "/home/usr/git/master/VAEG/VAE/dev/";
-			const char* path = "C:\\dev\\git\\master\\VAEG\\VAE\\dev\\";
+			const char* path = "/home/usr/git/master/VAEG/VAE/dev/";
+			// const char* path = "C:\\dev\\git\\master\\VAEG\\VAE\\dev\\";
 			vae::EngineConfig config  = { path, 44100 };
 			// config.processInBufferSwitch = false;
 			// config.hrtfVoices = 1;
@@ -82,6 +83,10 @@ namespace godot {
 				return true;
 			}
 			return false;
+		}
+
+		void setMixerEffectParameter(int bank, int mixer, int index, int param, float value) {
+			vae().setMixerEffectParameter(bank, mixer, index, param, value);
 		}
 
 		bool loadBank(String path) {

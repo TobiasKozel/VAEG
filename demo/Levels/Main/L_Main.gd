@@ -2,17 +2,25 @@ extends Spatial
 
 export var fast_close := true
 
+var thread
+
+func load_audio():
+	EngineInstance.load_hrtf("hrtf.json")
+	EngineInstance.load_bank("bank1")
+	EngineInstance.start()
+
 func engine_started():
 	pass
 
 func _exit_tree() -> void:
+	thread.wait_to_finish()
 	EngineInstance.stop()
 
 func _ready() -> void:
 	EngineInstance.connect("vae_started", self, "engine_started")
-	EngineInstance.load_hrtf("hrtf.json")
-	EngineInstance.load_bank("bank1")
-	EngineInstance.start()
+	thread = Thread.new()
+	thread.start(self, "load_audio")
+
 
 	if !OS.is_debug_build():
 		fast_close = false

@@ -31,6 +31,7 @@ var _speed: int
 var _is_sprinting_input := false
 var _is_jumping_input := false
 var _walk_time = 0
+var _was_on_floor := true
 
 ##################################################
 
@@ -67,7 +68,12 @@ func _input(event: InputEvent) -> void:
 func walk(delta: float) -> void:
 	direction_input()
 	
-	if is_on_floor():
+	var on_floor = is_on_floor()
+	
+	if on_floor:
+		if !_was_on_floor:
+			$step.play()
+			$step.speed = rand_range(0.8, 1.2)
 			
 		snap = -get_floor_normal() - get_floor_velocity() * delta
 		
@@ -85,6 +91,7 @@ func walk(delta: float) -> void:
 		
 		velocity.y -= gravity * delta
 	
+	_was_on_floor = on_floor
 	sprint(delta)
 	
 	accelerate(delta)
