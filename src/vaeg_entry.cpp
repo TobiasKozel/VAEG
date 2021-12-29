@@ -1,6 +1,4 @@
 #include "vae/vae.hpp"
-#define VAE_LOG_EVENTS
-#define VAE_LOG_VOICES
 #include "./vaeg_engine.hpp"
 #include "./vaeg_emitter.hpp"
 #include "./vaeg_listener.hpp"

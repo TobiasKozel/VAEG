@@ -1,6 +1,13 @@
 #ifndef _VAEG_ENGINE
 #define _VAEG_ENGINE
 
+#include "AudioStreamGenerator.hpp"
+#include "PoolArrays.hpp"
+// #define VAE_NO_AUDIO_THREAD
+// #define VAE_NO_AUDIO_DEVICE
+#define VAE_LOG_EVENTS
+#define VAE_LOG_VOICES
+
 #include "../VAE/src/core/vae_engine.hpp"
 #include "String.hpp"
 #include <cmath>
@@ -27,6 +34,9 @@
 #include <OS.hpp>
 #include <Godot.hpp>
 #include <Node.hpp>
+#include <AudioStream.hpp>
+#include <AudioStreamGeneratorPlayback.hpp>
+#include <AudioStreamPlayer.hpp>
 
 
 namespace godot {
@@ -38,6 +48,10 @@ namespace godot {
 
 	class VAEEngine : public Node {
 		GODOT_CLASS(VAEEngine, Node)
+		Ref<AudioStreamGenerator> mGenerator;
+		Ref<AudioStreamGeneratorPlayback> mPlayback;
+		AudioStreamPlayer* mPlayer;
+		PoolVector2Array mScratch;
 	public:
 		static void _register_methods() {
 			register_signal<VAEEngine>("vae_started");
@@ -61,16 +75,30 @@ namespace godot {
 			// config.hrtfVoices = 1;
 			// config.voices = 2;
 			vae().init(config);
+			vae().setMasterVolume(2);
+
 		}
 
 		~VAEEngine() { }
 
-		void _init() { }
+		void _init() {
+			// mScratch.resize(1024);
+			// auto test = mScratch.size();
+			// mPlayer = AudioStreamPlayer::_new();
+			// // mGenerator = AudioStreamGenerator::_new();
+			// mPlayback = AudioStreamGeneratorPlayback::_new();
+			// mGenerator = mPlayback;
+			// // mGenerator.instance();
+			// add_child(mPlayer);
+			// mPlayer->set_stream(mGenerator);
+			// mPlayer->play();
+		}
 
 		void _ready() { }
 
 		bool start() {
-			if (vae().start() == vae::Result::Success) {
+			if (vae().start() == vae::Result::Success)
+			{
 				emit_signal("vae_started");
 				return true;
 			}
@@ -99,6 +127,13 @@ namespace godot {
 
 		void _process(float delta) {
 			vae().update();
+			// int needs = mPlayback->get_frames_available();
+			// if (needs) {
+			// 	auto write = mScratch.write();
+			// 	auto ptr = reinterpret_cast<float*>(write.ptr());
+			// 	vae().process(needs, ptr, 2);
+			// 	mPlayback->push_buffer(mScratch);
+			// }
 		}
 	};
 }
