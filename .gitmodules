@@ -1,6 +1,6 @@
 [submodule "VAE"]
 	path = VAE
-	url = git@github.com:TobiasKozel/VAE.git
+	url = https://github.com/TobiasKozel/VAE.git
 [submodule "godot-cpp"]
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp
