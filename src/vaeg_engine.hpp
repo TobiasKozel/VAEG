@@ -1,10 +1,11 @@
 #ifndef _VAEG_ENGINE
 #define _VAEG_ENGINE
 
-#include "AudioStreamGenerator.hpp"
-#include "PoolArrays.hpp"
+// #include "AudioStreamGenerator.hpp"
+// #include "PoolArrays.hpp"
 // #define VAE_NO_AUDIO_THREAD
 // #define VAE_NO_AUDIO_DEVICE
+#define VAE_FORCE_LOG
 #define VAE_LOG_EVENTS
 #define VAE_LOG_VOICES
 
@@ -48,9 +49,9 @@ namespace godot {
 
 	class VAEEngine : public Node {
 		GODOT_CLASS(VAEEngine, Node)
-		Ref<AudioStreamGenerator> mGenerator;
-		Ref<AudioStreamGeneratorPlayback> mPlayback;
-		AudioStreamPlayer* mPlayer;
+		// Ref<AudioStreamGenerator> mGenerator;
+		// Ref<AudioStreamGeneratorPlayback> mPlayback;
+		// AudioStreamPlayer* mPlayer;
 		PoolVector2Array mScratch;
 	public:
 		static void _register_methods() {
@@ -68,8 +69,8 @@ namespace godot {
 		VAEEngine() {
 			// We use the bank from the submodule
 			// TODO This should be relative to the godot executable
-			const char* path = "/home/usr/git/master/VAEG/VAE/dev/";
-			// const char* path = "C:\\dev\\git\\master\\VAEG\\VAE\\dev\\";
+			// const char* path = "/home/usr/git/master/VAEG/VAE/dev/";
+			const char* path = "C:\\dev\\git\\master\\VAEG\\VAE\\dev\\";
 			vae::EngineConfig config  = { path, 44100 };
 			// config.processInBufferSwitch = false;
 			// config.hrtfVoices = 1;
