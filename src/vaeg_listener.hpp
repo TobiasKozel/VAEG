@@ -9,9 +9,19 @@ namespace godot {
 	class VAEListener : public godot::Spatial {
 		GODOT_CLASS(VAEListener, godot::Spatial)
 		vae::ListenerHandle mListener;
+		int mConfig = (int) vae::SpeakerConfiguration::Headphones;
 	public:
 		static void _register_methods() {
 			register_method("_process", &VAEListener::_process);
+			register_property<VAEListener, int>(
+				"speaker_configuration",
+				&VAEListener::setConfig, &VAEListener::getConfig,
+				(int) vae::SpeakerConfiguration::Headphones,
+				GODOT_METHOD_RPC_MODE_DISABLED,
+				GODOT_PROPERTY_USAGE_DEFAULT,
+				GODOT_PROPERTY_HINT_ENUM,
+				"Mono, Headphones, Stereo, HRTF, Quadrophonic, Suround"
+			);
 		}
 
 		void _init() {
@@ -22,6 +32,15 @@ namespace godot {
 
 		~VAEListener() {
 			vae().removeListener(mListener);
+		}
+
+		void setConfig(int config) {
+			mConfig = config;
+			vae().setListenerConfiguration(mListener, (vae::SpeakerConfiguration) config);
+		}
+
+		int getConfig() {
+			return (int) mConfig;
 		}
 
 		void _process(float delta) {

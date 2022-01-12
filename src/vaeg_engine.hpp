@@ -1,13 +1,13 @@
 #ifndef _VAEG_ENGINE
 #define _VAEG_ENGINE
 
-// #include "AudioStreamGenerator.hpp"
-// #include "PoolArrays.hpp"
 // #define VAE_NO_AUDIO_THREAD
 // #define VAE_NO_AUDIO_DEVICE
-#define VAE_FORCE_LOG
-#define VAE_LOG_EVENTS
-#define VAE_LOG_VOICES
+// #define VAE_NO_LOG
+#define VAE_CUSTOM_PRINT	// log to own function
+#define VAE_FORCE_LOG		// also log in release
+#define VAE_LOG_EVENTS		// log events
+#define VAE_LOG_VOICES		// log voices
 
 #include "../VAE/src/core/vae_engine.hpp"
 #include "String.hpp"
@@ -38,6 +38,11 @@
 #include <AudioStream.hpp>
 #include <AudioStreamGeneratorPlayback.hpp>
 #include <AudioStreamPlayer.hpp>
+
+void vae_print(vae::LogLevel level, const char* message) {
+	godot::String m(message);
+	godot::Godot::print(message);
+}
 
 
 namespace godot {
