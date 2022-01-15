@@ -31,9 +31,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON) # -fPIC needed for clang to link
 
 file(GLOB SRC_CORE "src/*.cpp")
 
-set(VAE_PROFILER ON)
-# set(VAE_BACKEND_PORTAUDIO OFF)
-# set(VAE_BACKEND_RTAUDIO OFF)
+set(VAE_PROFILER OFF)
 
 add_subdirectory(VAE)
 

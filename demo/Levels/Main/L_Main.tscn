@@ -214,19 +214,35 @@ mixer = 2
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384313, 0, 8.98279 )
 shape = SubResource( 2 )
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
+[node name="engine_sound_hrtf" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.7861, 2.90502, -1.86819 )
 mesh = SubResource( 3 )
 material/0 = null
 
-[node name="VAEEmitter" type="Spatial" parent="MeshInstance"]
+[node name="VAEEmitter" type="Spatial" parent="engine_sound_hrtf"]
 script = ExtResource( 7 )
 auto_emitter = true
 bank = 0
 event = 11
 max_distance = 5000.0
 
-[node name="Spatial" type="Spatial" parent="MeshInstance"]
+[node name="Spatial" type="Spatial" parent="engine_sound_hrtf"]
+script = ExtResource( 9 )
+emitter_path = NodePath("../VAEEmitter")
+
+[node name="engine_sound" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 17.6247, 2.90502, 8.7889 )
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="VAEEmitter" type="Spatial" parent="engine_sound"]
+script = ExtResource( 7 )
+auto_emitter = true
+bank = 0
+event = 12
+max_distance = 5000.0
+
+[node name="Spatial" type="Spatial" parent="engine_sound"]
 script = ExtResource( 9 )
 emitter_path = NodePath("../VAEEmitter")
 
