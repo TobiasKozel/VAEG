@@ -4,7 +4,7 @@
 // #define VAE_NO_AUDIO_THREAD
 // #define VAE_NO_AUDIO_DEVICE
 // #define VAE_NO_LOG
-#define VAE_CUSTOM_PRINT	// log to own function
+// #define VAE_CUSTOM_PRINT	// log to own function
 #define VAE_FORCE_LOG		// also log in release
 #define VAE_LOG_EVENTS		// log events
 #define VAE_LOG_VOICES		// log voices
@@ -35,14 +35,15 @@
 #include <OS.hpp>
 #include <Godot.hpp>
 #include <Node.hpp>
+#include <ProjectSettings.hpp>
 #include <AudioStream.hpp>
 #include <AudioStreamGeneratorPlayback.hpp>
 #include <AudioStreamPlayer.hpp>
 
-void vae_print(vae::LogLevel level, const char* message) {
-	godot::String m(message);
-	godot::Godot::print(message);
-}
+// void vae_print(vae::LogLevel level, const char* message) {
+// 	godot::String m(message);
+// 	godot::Godot::print(message);
+// }
 
 
 namespace godot {
@@ -54,10 +55,9 @@ namespace godot {
 
 	class VAEEngine : public Node {
 		GODOT_CLASS(VAEEngine, Node)
-		// Ref<AudioStreamGenerator> mGenerator;
-		// Ref<AudioStreamGeneratorPlayback> mPlayback;
-		// AudioStreamPlayer* mPlayer;
-		PoolVector2Array mScratch;
+
+		// keep the bank path around since it's used in the engine config struct
+		std::string mBankPath;
 	public:
 		static void _register_methods() {
 			register_signal<VAEEngine>("vae_started");
@@ -68,36 +68,29 @@ namespace godot {
 			register_method("stop", &VAEEngine::stop);
 			register_method("load_bank", &VAEEngine::loadBank);
 			register_method("load_hrtf", &VAEEngine::loadHRTF);
+			register_method("set_volume", &VAEEngine::setVolume);
 			register_method("set_mixer_effect", &VAEEngine::setMixerEffectParameter);
 		}
 
 		VAEEngine() {
-			// We use the bank from the submodule
-			// TODO This should be relative to the godot executable
-			// const char* path = "/home/usr/git/master/VAEG/VAE/dev/";
-			const char* path = "C:\\dev\\git\\master\\VAEG\\VAE\\dev\\";
-			vae::EngineConfig config  = { path, 44100 };
-			// config.processInBufferSwitch = false;
-			// config.hrtfVoices = 1;
-			// config.voices = 2;
-			vae().init(config);
-			vae().setMasterVolume(2);
+			const bool useProjectFolder = !OS::get_singleton()->has_feature("standalone");
+			if (useProjectFolder) {
+				auto path = ProjectSettings::get_singleton()->globalize_path("res://");
+				mBankPath = path.utf8().get_data();
+				mBankPath = mBankPath + "banks/";
+			} else {
+				auto path = OS::get_singleton()->get_executable_path().get_base_dir();
+				mBankPath = path.utf8().get_data();
+				mBankPath = mBankPath + "/banks/"; // needs a seperator
+			}
 
+			vae::EngineConfig config  = { mBankPath.c_str(), 44100 };
+			vae().init(config);
 		}
 
 		~VAEEngine() { }
 
 		void _init() {
-			// mScratch.resize(1024);
-			// auto test = mScratch.size();
-			// mPlayer = AudioStreamPlayer::_new();
-			// // mGenerator = AudioStreamGenerator::_new();
-			// mPlayback = AudioStreamGeneratorPlayback::_new();
-			// mGenerator = mPlayback;
-			// // mGenerator.instance();
-			// add_child(mPlayer);
-			// mPlayer->set_stream(mGenerator);
-			// mPlayer->play();
 		}
 
 		void _ready() { }
@@ -131,15 +124,12 @@ namespace godot {
 			return vae().loadHRTF(path.utf8().get_data()) == vae::Result::Success;
 		}
 
+		void setVolume(float volume) {
+			vae().setMasterVolume(volume);
+		}
+
 		void _process(float delta) {
 			vae().update();
-			// int needs = mPlayback->get_frames_available();
-			// if (needs) {
-			// 	auto write = mScratch.write();
-			// 	auto ptr = reinterpret_cast<float*>(write.ptr());
-			// 	vae().process(needs, ptr, 2);
-			// 	mPlayback->push_buffer(mScratch);
-			// }
 		}
 	};
 }

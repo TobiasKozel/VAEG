@@ -12,7 +12,7 @@ func _process(delta):
 	var player = get_tree().get_nodes_in_group("Player")
 	if (player.empty()):
 		return
-	
+
 	player = player[0]
 	var playar_pos = player.global_transform.origin
 	var self_pos = global_transform.origin

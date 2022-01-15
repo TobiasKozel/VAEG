@@ -14,21 +14,18 @@ func engine_started():
 	pass
 
 func _exit_tree() -> void:
-	thread.wait_to_finish()
+	if (thread):
+		thread.wait_to_finish()
 	EngineInstance.stop()
 
 func _ready() -> void:
 	EngineInstance.connect("vae_started", self, "engine_started")
-	thread = Thread.new()
-	thread.start(self, "load_audio")
-
-
-	if !OS.is_debug_build():
-		fast_close = false
-
-	if fast_close:
-		print("** Fast Close enabled in the 'L_Main.gd' script **")
-		print("** 'Esc' to close 'Shift + F1' to release mouse **")
+	EngineInstance.set_volume(2)
+	load_audio()
+	# Threaded bank loading seems to crash for some reason :/
+	#thread = Thread.new()
+	#thread.start(self, "load_audio")
+	print("** 'Esc' to close 'Shift + F1' to release mouse **")
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and fast_close:
