@@ -1,0 +1,56 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Roboto-Bold.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+export(String) var text setget text_set, text_get
+
+func text_set(t):
+	$Viewport/RichTextLabel.text = t
+	$Viewport.render_target_update_mode = Viewport.UPDATE_ONCE
+
+func text_get():
+	return $Viewport/RichTextLabel.text
+	
+
+func _ready():
+	text = \"text\"
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 50
+outline_size = 4
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("Viewport")
+
+[node name="3DText" type="Spatial"]
+script = SubResource( 1 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 500, 100 )
+transparent_bg = true
+usage = 0
+render_target_update_mode = 1
+shadow_atlas_quad_0 = 0
+shadow_atlas_quad_1 = 0
+shadow_atlas_quad_2 = 0
+shadow_atlas_quad_3 = 0
+
+[node name="RichTextLabel" type="Label" parent="Viewport"]
+anchor_right = 1.0
+margin_bottom = 60.0
+custom_fonts/font = SubResource( 2 )
+text = "TEXT"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+flip_v = true
+texture = SubResource( 3 )

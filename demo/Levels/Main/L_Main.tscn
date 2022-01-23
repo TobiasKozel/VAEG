@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Levels/Main/Geometry/Floor.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://addons/vaeg/bin/classes/emitter.gdns" type="Script" id=7]
 [ext_resource path="res://Levels/Main/ReverbZone.gd" type="Script" id=8]
 [ext_resource path="res://Levels/Main/VAEOcclusion.gd" type="Script" id=9]
+[ext_resource path="res://3DText.tscn" type="PackedScene" id=10]
 
 [sub_resource type="CubeMesh" id=1]
 
@@ -170,6 +171,26 @@ transform = Transform( -0.866026, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75,
 shadow_enabled = true
 shadow_bias = 0.05
 directional_shadow_max_distance = 250.0
+
+[node name="3DText" parent="." instance=ExtResource( 10 )]
+transform = Transform( -0.315715, 0, -0.948854, 0, 1, 0, 0.948854, 0, -0.315715, 14.1085, 5.39761, 7.88503 )
+text = "Normal Panning"
+
+[node name="3DText2" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.311854, 0, -0.95013, 0, 1, 0, 0.95013, 0, 0.311854, 12.7455, 5.39761, -5.0206 )
+text = "Musik start"
+
+[node name="3DText3" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.419008, 0, 0.907982, 0, 1, 0, -0.907982, 0, 0.419008, -14.4307, 4.99824, -12.6099 )
+text = "Musik stop"
+
+[node name="3DText4" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.00851688, 0, 0.999964, 0, 1, 0, -0.999964, 0, 0.00851688, -10.8842, 4.99824, -1.71454 )
+text = "HRTF Panning"
+
+[node name="3DText5" parent="." instance=ExtResource( 10 )]
+transform = Transform( -0.999447, 0, -0.0332601, 0, 1, 0, 0.0332601, 0, -0.999447, -0.0540485, 4.99824, 19.3214 )
+text = "Reverb Zone"
 
 [node name="Spatial" type="Spatial" parent="."]
 
