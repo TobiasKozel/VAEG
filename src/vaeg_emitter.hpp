@@ -7,7 +7,6 @@
 #include <Spatial.hpp>
 
 namespace godot {
-
 	class VAEEmitter : public godot::Spatial {
 		GODOT_CLASS(VAEEmitter, godot::Spatial)
 		vae::EmitterHandle mEmitter;
@@ -23,11 +22,11 @@ namespace godot {
 		void getTransform(vae::LocationDirection& t) {
 			const auto global = get_global_transform();
 			const auto pos = global.get_origin();
-			t = {
+			t = { {
 				pos.x,
 				pos.y,
 				pos.z,
-			};
+			} };
 		}
 
 	public:
@@ -91,9 +90,7 @@ namespace godot {
 		void stop() {
 			vae().stopEmitter(mEmitter);
 		}
-
 	};
-
 }
 
 #endif // _VAEG_EMITTER

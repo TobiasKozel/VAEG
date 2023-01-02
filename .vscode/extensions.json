@@ -5,6 +5,8 @@
         "twxs.cmake",
         "aaron-bond.better-comments",
         "llvm-vs-code-extensions.vscode-clangd",
-        "editorconfig.editorconfig"
+        "editorconfig.editorconfig",
+        "geequlim.godot-tools",
+        "gruntfuggly.bettercomment"
     ]
 }

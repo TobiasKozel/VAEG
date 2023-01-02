@@ -37,4 +37,4 @@ far = 250.0
 
 [node name="VAEListener" type="Spatial" parent="Head"]
 script = ExtResource( 2 )
-speaker_configuration = 3
+speaker_configuration = 1
