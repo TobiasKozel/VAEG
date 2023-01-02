@@ -90,38 +90,11 @@
 			},
 		},
 		{
-			"name": "(gdb) Attach x11",
-			"type": "cppdbg",
-			"request": "attach",
-			"program": "${workspaceFolder}/demo/addons/vaeg/bin/x11/libvaeg.so",
-			"processId": "${command:pickProcess}",
-			"MIMode": "gdb",
-			"miDebuggerPath": "/bin/gdb",
-			"setupCommands": [
-				{
-					"description": "Enable pretty-printing for gdb",
-					"text": "-enable-pretty-printing",
-					"ignoreFailures": true
-				}
-			]
-		},
-		{
 			"name": "(lldb) scene debug",
 			"type": "lldb",
 			"request": "launch",
-			"program": "/home/usr/git/master/godot/bin/godot.x11.tools.64",
+			"program": "${workspaceFolder}/../godot/bin/godot.x11.tools.64",
 			"cwd": "${workspaceFolder}/demo",
-			"setupCommands": [
-				{
-					"description": "Enable pretty-printing for gdb",
-					"text": "-enable-pretty-printing",
-					"ignoreFailures": true
-				},
-				{
-					"description": "Additional libs for gdb",
-					"text": "set env LD_LIBRARY_PATH=${workspaceFolder}/demo/addons/vaeg/bin/x11"
-				}
-			],
 			"args": [
 				"--path",
 				"${workspaceFolder}/demo",
@@ -137,17 +110,6 @@
 			"request": "launch",
 			"program": "/usr/bin/godot",
 			"cwd": "${workspaceFolder}/demo",
-			"setupCommands": [
-				{
-					"description": "Enable pretty-printing for gdb",
-					"text": "-enable-pretty-printing",
-					"ignoreFailures": true
-				},
-				{
-					"description": "Additional libs for gdb",
-					"text": "set env LD_LIBRARY_PATH=${workspaceFolder}/demo/addons/vaeg/bin/x11"
-				}
-			],
 			"args": [
 				"${workspaceFolder}/demo/Levels/Main/L_Main.tscn",
 			]
@@ -156,19 +118,8 @@
 			"name": "(lldb) editor debug",
 			"type": "lldb",
 			"request": "launch",
-			"program": "/home/usr/git/master/godot/bin/godot.x11.tools.64",
+			"program": "${workspaceFolder}/../godot/bin/godot.x11.tools.64",
 			"cwd": "${workspaceFolder}/demo",
-			"setupCommands": [
-				{
-					"description": "Enable pretty-printing for gdb",
-					"text": "-enable-pretty-printing",
-					"ignoreFailures": true
-				},
-				{
-					"description": "Additional libs for gdb",
-					"text": "set env LD_LIBRARY_PATH=${workspaceFolder}/demo/addons/vaeg/bin/x11"
-				}
-			],
 			"args": [
 				"${workspaceFolder}/demo/project.godot"
 			]
@@ -179,17 +130,6 @@
 			"request": "launch",
 			"program": "/usr/bin/godot",
 			"cwd": "${workspaceFolder}/demo",
-			"setupCommands": [
-				{
-					"description": "Enable pretty-printing for gdb",
-					"text": "-enable-pretty-printing",
-					"ignoreFailures": true
-				},
-				{
-					"description": "Additional libs for gdb",
-					"text": "set env LD_LIBRARY_PATH=${workspaceFolder}/demo/addons/vaeg/bin/x11"
-				}
-			],
 			"args": [
 				"${workspaceFolder}/demo/project.godot"
 			]

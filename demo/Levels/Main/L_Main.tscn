@@ -27,7 +27,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
 [node name="ArenaGeometry" type="Spatial" parent="."]
 
 [node name="Floor1" parent="ArenaGeometry" instance=ExtResource( 2 )]
-material/0 = null
 
 [node name="Wall1" parent="ArenaGeometry" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.75, -20 )
@@ -71,7 +70,6 @@ transform = Transform( 0.900452, 0, 0, 0, 2, 0, 0, 0, 0.878705, 13.2507, 0.92831
 [node name="MeshInstance" type="MeshInstance" parent="ArenaGeometry/Start"]
 transform = Transform( 0.224691, 0, 0, 0, 0.0816612, 0, 0, 0, 0.450554, -1.01842, 0.487628, 0 )
 mesh = SubResource( 1 )
-material/0 = null
 
 [node name="VAEEmitter" type="Spatial" parent="ArenaGeometry/Start"]
 script = ExtResource( 7 )
@@ -86,7 +84,6 @@ transform = Transform( -0.847839, 0, 0.295962, 0, 2, 0, -0.303287, 0, -0.827362,
 [node name="MeshInstance" type="MeshInstance" parent="ArenaGeometry/End"]
 transform = Transform( 0.224691, 0, 0, 0, 0.0816612, 0, 0, 0, 0.450554, -1.01842, 0.487628, 0 )
 mesh = SubResource( 1 )
-material/0 = null
 
 [node name="VAEEmitter" type="Spatial" parent="ArenaGeometry/End"]
 script = ExtResource( 7 )
@@ -238,7 +235,6 @@ shape = SubResource( 2 )
 [node name="engine_sound_hrtf" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.7861, 2.90502, -1.86819 )
 mesh = SubResource( 3 )
-material/0 = null
 
 [node name="VAEEmitter" type="Spatial" parent="engine_sound_hrtf"]
 script = ExtResource( 7 )
@@ -254,7 +250,6 @@ emitter_path = NodePath("../VAEEmitter")
 [node name="engine_sound" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 17.6247, 2.90502, 8.7889 )
 mesh = SubResource( 3 )
-material/0 = null
 
 [node name="VAEEmitter" type="Spatial" parent="engine_sound"]
 script = ExtResource( 7 )

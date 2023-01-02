@@ -8,6 +8,7 @@
 #define VAE_FORCE_LOG		// also log in release
 #define VAE_LOG_EVENTS		// log events
 #define VAE_LOG_VOICES		// log voices
+#define VAE_IMPL
 
 #include "../VAE/src/core/vae_engine.hpp"
 #include "String.hpp"
@@ -84,7 +85,9 @@ namespace godot {
 				mBankPath = mBankPath + "/banks/"; // needs a seperator
 			}
 
-			vae::EngineConfig config  = { mBankPath.c_str(), 44100 };
+			vae::EngineConfig config;
+			config.rootPath = mBankPath.c_str();
+			config.internalSampleRate = 44100;
 			vae().init(config);
 		}
 
