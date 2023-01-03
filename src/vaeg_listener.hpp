@@ -49,18 +49,10 @@ namespace godot {
 			const auto& front = global.basis.z;
 			const auto& up = global.basis.y;
 			const auto& test = front;
-			// printf("%f\t%f\t%f\n", test[0], test[1], test[2]);
 			vae().setListener(mListener, {
-				{
-					pos.x, pos.y, pos.z,
-				},
-				{
-					// for some reason these are all negative, flipping the just works
-					-front[0], -front[1], front[2]
-				},
-				{
-					-up[0], -up[1], up[2]
-				}
+				{ pos.x, pos.y, pos.z },
+				{ front[0], front[1], front[2] },
+				{ up[0], up[1], up[2] }
 			});
 		}
 

@@ -13,7 +13,7 @@ namespace godot {
 		int mBank = vae::InvalidBankHandle;
 		int mEvent = vae::InvalidEventHandle;
 		float mMaxDistance = 50;
-		float mSpread = 0.5;
+		float mSeparation = 1.0;
 		float mSpeed = 1.0;
 		float mLowpass = 0.0;
 		float mHighpass = 0.0;
@@ -38,7 +38,7 @@ namespace godot {
 			register_property<VAEEmitter, int>("bank", &VAEEmitter::mBank, vae::InvalidBankHandle);
 			register_property<VAEEmitter, int>("event", &VAEEmitter::mEvent, vae::InvalidEventHandle);
 			register_property<VAEEmitter, float>("max_distance", &VAEEmitter::mMaxDistance, 50);
-			register_property<VAEEmitter, float>("spread", &VAEEmitter::mSpread, 0.5);
+			register_property<VAEEmitter, float>("separation", &VAEEmitter::mSeparation, 1.0);
 			register_property<VAEEmitter, float>("lowpass", &VAEEmitter::mLowpass, 0.0);
 			register_property<VAEEmitter, float>("highpass", &VAEEmitter::mHighpass, 0.0);
 			register_property<VAEEmitter, float>("speed", &VAEEmitter::mSpeed, 1.0);
@@ -56,7 +56,7 @@ namespace godot {
 			if (mAutoEmitter) {
 				vae::LocationDirection t;
 				getTransform(t);
-				mEmitter = vae().createAutoEmitter(mBank, mEvent, mMaxDistance, t, mSpread);
+				mEmitter = vae().createAutoEmitter(mBank, mEvent, mMaxDistance, t, mSeparation);
 			} else {
 				mEmitter = vae().createEmitter();
 			}
@@ -77,7 +77,7 @@ namespace godot {
 		void _process(float delta) {
 			vae::LocationDirection t;
 			getTransform(t);
-			vae().setEmitter(mEmitter, t, mSpread);
+			vae().setEmitter(mEmitter, t, mSeparation);
 			vae().setSpeed(mEmitter, mSpeed);
 			vae().setLowpass(mEmitter, mLowpass);
 			vae().setHighpass(mEmitter, mHighpass);

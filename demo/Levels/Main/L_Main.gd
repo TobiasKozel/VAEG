@@ -5,9 +5,9 @@ export var fast_close := true
 var thread
 
 func load_audio():
-	# EngineInstance.load_hrtf("hrtf.json")
+	EngineInstance.load_hrtf("hrtf.json")
 	EngineInstance.load_bank("bank1")
-	# EngineInstance.load_bank("bank2")
+	EngineInstance.load_bank("bank2")
 	EngineInstance.start()
 
 func engine_started():
